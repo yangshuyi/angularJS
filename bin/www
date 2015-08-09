@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+//NodeJS启动文件
+
 /**
  * Module dependencies.
  */

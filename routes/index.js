@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
+//test node
+
 //express内部有个map，对于每一种请求方法(get,post...)都有映射，每个都映射到一个 路由对象的数组
 
 //'*' 是通配符，所以访问任何一个路径

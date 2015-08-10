@@ -1,0 +1,263 @@
+/** style for ui-css */
+.ccc-label {
+    /*padding: 5px 3px 0 20px;*/
+    width: 100%;
+    text-align: right;
+    padding: 5px 10px 0 0;
+}
+
+.ccc-field {
+    width: 100% !important;
+    vertical-align: top !important;
+}
+
+.form-control[disabled] {
+    background-color: #f1f1f1;
+    opacity: 1;
+}
+
+.form-control[disabled], fieldset[disabled] .form-control {
+     cursor: default !important;
+}
+
+input[type="text"], input[type="email"], input[type="tel"], input[type="search"], input[type="url"], input[type="password"], .ui-autocomplete-input, textarea, .uneditable-input {
+    padding: 6px !important;
+}
+
+.ccc-unit {
+    position: relative;
+    display: inline-block;
+    margin-right: -30px;
+    right: 28px;
+    top: 8px;
+}
+
+.ccc-unit-2 {
+    position: relative;
+    display: inline-block;
+    margin-right: -40px;
+    right: 38px;
+    top: 8px;
+}
+
+.ccc-unit-4 {
+    position: relative;
+    display: inline-block;
+    margin-right: -60px;
+    right: 60px;
+    top: 8px;
+}
+
+.ccc-unit-hide {
+    display: none;
+}
+
+/** slider */
+.ui-widget-header {
+    background-image: none !important;
+    background-color: #f5f5f5 !important;
+    padding: 0 !important;
+    font-size: 14px !important;
+    line-height: 1 !important;
+}
+
+.ui-dialog .ui-dialog-titlebar-close {
+    margin: -6px 0 0 0 !important;
+    background: url("../image/close.png") no-repeat !important;
+}
+
+.ui-dialog .ui-dialog-titlebar {
+    background: url("../image/dialog-head.png") repeat-x !important;
+}
+
+.ui-dialog .ui-dialog-title {
+    color: #fff !important;
+}
+
+.ui-slider-handle {
+    border-color: #729fcf !important;
+}
+
+.slider-control {
+    display: inline-block;
+    vertical-align: middle;
+    width: auto;
+    height: 20px;
+    font-size: 14px;
+}
+
+.slider-width {
+    width: 250px;
+}
+
+.panel-icon {
+    cursor: pointer;
+}
+
+.panel {
+    margin-bottom: 15px !important;
+    background-color: #ffffff;
+    border: 1px solid #e7e7e7 !important;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.panel-heading {
+    padding: 5px 15px !important;
+    background: url("../image/button-default-focus.png") repeat-x !important;
+    color:#fff !important;
+}
+
+.sub-panel .panel {
+    border:none;
+    border-bottom: 1px solid #dddddd;
+    border-top: 1px solid transparent;
+}
+
+.text-area {
+    resize:none;
+}
+
+hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 0;
+    border-top: 1px solid #eeeeee;
+}
+
+.data-error .ui-select-container,
+div.data-error,
+.data-error input,
+.input-in-grid.data-error,
+input.data-error,
+.data-error select,
+.data-error textarea,
+.data-error .datePicker,
+.data-error .radio-group
+{border: solid red 1px !important; }
+/*.data-error::after {content: "Error"; color:red; }*/
+
+
+.flashing input,
+.flashing textarea,
+.flashing div.ta-scroll-window,
+.flashing select{
+    background-color: red !important;
+}
+.flashing>.ui-select-container>a{
+    background-color: red !important;
+    background-image: none;
+}
+
+
+.data-warning select,
+.data-warning textarea,
+.data-warning .datePicker
+{border: solid yellow 1px !important; }
+/*.data-warning::after {content: "Warning"; color:red; }*/
+
+.requireIco {
+    color: red;
+    width: 10px;
+    height: 20px !important;
+    display: inline-block;
+    float: none !important;;
+    padding-right: 5px;
+}
+
+.placeholderBox {
+    margin-left: 3px;
+    line-height: 28px;
+    height: 28px;
+    position:relative;
+    width: 300px;
+    display: inline-block;
+}
+.placeholderBox .k-textbox {
+    position:absolute;
+    top: 0px;
+    left: 0px;
+    filter: alpha(Opacity=80);
+    opacity: 0.8;
+    width: 100%;
+}
+.placeholderBox .placeholder {
+    margin-left:4px;
+    position: absolute;
+}
+.searchBox.placeholderBox {
+    width: 200px;
+    line-height: 23px;
+    height: 23px;
+    display: inline-block;
+}
+
+.searchIconBtnPos{
+    display: inline-block;
+    position: absolute;
+    right: 5px;
+    top: 8px;
+    width: 16px;
+    height: 16px;
+    background: url("../image/publicSprite.png") no-repeat -100px -180px;
+    cursor: pointer;
+    vertical-align: middle
+}
+.clearIconBtnPos {
+    position: absolute;
+    right: 9px;
+    top: 0.3em;
+    width: 16px;
+    height: 16px;
+    background-position: -100px -180px;
+    cursor: pointer;
+    z-index: 2;
+}
+.display_none{
+    display: none!important;
+}
+.display_block{
+    display: block!important;
+}
+
+.iconReturnSearch{
+    background-image: url("../image/sprite.png");
+    background-position: 50px -181px;
+    cursor: pointer;
+    height: 12px;
+    position: absolute;
+    right: 27px;
+    top: 10px;
+    width: 12px;
+    z-index: 2;
+    display: none;
+}
+.cannot-blur {
+    border: solid 1px red !important;
+}
+
+.redLine{
+    border-color: red !important;
+}
+
+/** style for drop-down-list**/
+.select2-container {
+    width: 100%;
+}
+
+.select2-container .select2-choice {
+    height: 34px !important;
+}
+
+.select2-container .select2-choice > .select2-chosen {
+    margin-right: 0px !important;
+}
+
+body > .select2-container.open {
+    z-index: 2147483648 !important;
+}
+
+.select2-results {
+    max-height: 192px !important;
+}

@@ -1,17 +1,20 @@
-var mainApp = angular.module("mainApp", ['ngRoute']);
+var mainApp = angular.module("mainApp", ['ui.router','userService']);
 
-mainApp.config(['$routeProvider',
-    function($routeProvider) {
-        $routeProvider.
-            when('/login', {
-                templateUrl: 'addStudent.html',
-                controller: 'AddStudentController'
-            }).
-            when('/viewStudents', {
-                templateUrl: 'viewStudents.html',
-                controller: 'ViewStudentsController'
-            }).
-            otherwise({
-                redirectTo: '/addStudent'
-            });
+mainApp.config(['$stateProvider', function($stateProvider) {
+        $stateProvider
+            .state('main', {
+                url:'/main',
+                templateUrl: 'main/main.html',
+                controller: ['$scope','Restangular','userService', '$rootScope',
+                    function($scope, Restangular, userService, $rootScope) {
+                    
+					//load user info and menus
+                    $rootScope.user = currentUser;
+                }],
+                resolve: {
+                    currentUser: ['userService', function(userUtils) {
+                        return userService.getCurrentUser();
+                    }]
+                }
+            })
     }]);

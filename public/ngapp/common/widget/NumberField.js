@@ -13,7 +13,7 @@
  * Create by Coral on 2015-04-29
  */
 angular.module('common.widget.NumberField', [])
-    .directive('numberField', [function() {
+    .directive('numberField', [function () {
         return {
             restrict: 'EA',
             require: 'ngModel',
@@ -32,17 +32,17 @@ angular.module('common.widget.NumberField', [])
                 lastValue: '=',
                 confirm: '&'
             },
-            link:  function(scope, el, attrs, ngModelCtrl) {
-                scope.unitStyle = function() {
-                    if(typeof scope.unit == 'undefined') {
+            link: function (scope, el, attrs, ngModelCtrl) {
+                scope.unitStyle = function () {
+                    if (typeof scope.unit === 'undefined') {
                         return "ccc-unit-hide";
                     } else {
-                        if(typeof scope.unitClass == 'undefined') {
+                        if (typeof scope.unitClass === 'undefined') {
                             if (scope.unit.length === 1) {
                                 return "ccc-unit";
                             } else if (scope.unit.length === 2) {
                                 return "ccc-unit-2";
-                            } else if (scope.unit.length === 4){
+                            } else if (scope.unit.length === 4) {
                                 return "ccc-unit-4";
                             }
                         } else {
@@ -50,8 +50,8 @@ angular.module('common.widget.NumberField', [])
                         }
                     }
                 };
-                scope.fieldStyle = function() {
-                    if(typeof scope.fieldClass == 'undefined') {
+                scope.fieldStyle = function () {
+                    if (typeof scope.fieldClass === 'undefined') {
                         return "form-control ccc-field";
                     } else {
                         return scope.fieldClass;
@@ -60,11 +60,11 @@ angular.module('common.widget.NumberField', [])
                 scope.lastValue = scope.ngModel;
 
             },
-            template:  '<div class="{{fieldDivClass || \'form-inline\'}}">' +
+            template: '<div class="{{fieldDivClass || \'form-inline\'}}">' +
             '<input ng-blur="blurEvent()" class="{{fieldStyle()}}" ng-model-options="{allowInvalid: false}" min="{{min}}" max="{{max}}" precision="{{decimal}}" number-filed-input type="text" ng-class="fieldStyle()" ng-model="ngModel" ng-disabled="ngDisabled" title="{{ ngDisabled ? ngModel : null}}">' +
             '<span class="{{unitStyle()}}">({{ unit }})</span>' +
             '</div>'
-        }
+        };
     }])
 
     .directive('numberFiledInput', ['$parse', '$q', function ($parse, $q) {
@@ -74,7 +74,7 @@ angular.module('common.widget.NumberField', [])
 
         function link(scope, el, attrs, ngModelCtrl) {
             var precision = 0;
-            if(attrs.precision){
+            if (attrs.precision) {
                 precision = parseInt(attrs.precision, 10);
             }
             var min = parseInt(attrs.min, 10);
@@ -83,10 +83,10 @@ angular.module('common.widget.NumberField', [])
             var lastMinValidatedValue = initValue;
             var lastMaxValidatedValue = initValue;
             var lastValidValue = initValue;
-            var confirm = function() {
+            var confirm = function () {
                 var confirmed = scope.confirm();
                 return confirmed === undefined ? true : confirmed;
-            }
+            };
 
             /**
              * Returns a rounded number in the precision setup by the directive
@@ -158,9 +158,7 @@ angular.module('common.widget.NumberField', [])
 
                 var empty = ngModelCtrl.$isEmpty(value);
                 if (empty || NUMBER_REGEXP.test(value)) {
-                    lastValidValue = (value === '')
-                        ? null
-                        : (empty ? value : parseFloat(value));
+                    lastValidValue = (value === '') ? null : (empty ? value : parseFloat(value));
                 } else {
                     setViewValue(lastValidValue);
 
@@ -171,7 +169,7 @@ angular.module('common.widget.NumberField', [])
                 return lastValidValue;
             });
 
-            ngModelCtrl.$formatters.push(function(v) {
+            ngModelCtrl.$formatters.push(function (v) {
                 //scope.lastValue = v;
                 return formatViewValue(v);
             });
@@ -195,11 +193,11 @@ angular.module('common.widget.NumberField', [])
 
             }
 
-            scope.blurEvent = function() {
+            scope.blurEvent = function () {
                 var value = ngModelCtrl.$viewValue;
                 if (ngModelCtrl.$dirty) {
                     $q.when(confirm())
-                        .then(function(confirmed) {
+                        .then(function (confirmed) {
                             if (confirmed) {
                                 setViewValue(value);
                                 scope.lastValue = scope.ngModel;
@@ -209,15 +207,15 @@ angular.module('common.widget.NumberField', [])
                                 setViewValue(scope.lastValue);
                             }
                         })
-                        .then(function() {
+                        .then(function () {
                             scope.onBlur();
                         });
                 }
-                else{
+                else {
                     scope.onBlur();
                 }
 
-            }
+            };
         }
 
         return {
@@ -225,13 +223,13 @@ angular.module('common.widget.NumberField', [])
             require: 'ngModel',
             link: link
         };
-    }]).directive('selectAll', function(){
+    }]).directive('selectAll', function () {
         return {
             restrict: 'A',
-            link : function($scope, $element){
-                $element.click(function(e){
+            link: function ($scope, $element) {
+                $element.click(function (e) {
                     e.target.select();
-                })
+                });
             }
-        }
+        };
     });

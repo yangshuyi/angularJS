@@ -4,35 +4,62 @@
     <meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <title ng-bind="title"></title>
-    <link rel="stylesheet" href="/lib/jquery-ui-1.11.4/jquery-ui.css">
-    <link rel="stylesheet" href="/lib/bootstrap-3.3.5-dist/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="lib/jquery-ui-1.11.4/jquery-ui.css">
+    <link rel="stylesheet" href="lib/bootstrap-3.3.5-dist/css/bootstrap.css">
 </head>
 
 <body>
+
 <div ui-view>
 </div>
 
-<script src="/lib/jquery-ui-1.11.4/external/jquery/jquery.js"></script>
-<script src="/lib/jquery-ui-1.11.4/jquery-ui.js"></script>
-<script src="/lib/angular-1.4.3/angular.js"></script>
-<script src="/lib/bootstrap-3.3.5-dist/js/bootstrap.js"></script>
-<script src="/lib/angular-ui-bootstrap-0.13.3/ui-bootstrap-0.13.3.js"></script>
-<script src="/lib/angular-ui-bootstrap-0.13.3/ui-bootstrap-tpls-0.13.3.js"></script>
+<script src="lib/lodash-3.10.1/lodash.js"></script>
+<script src="lib/jquery-ui-1.11.4/external/jquery/jquery.js"></script>
+<script src="lib/jquery-ui-1.11.4/jquery-ui.js"></script>
+<script src="lib/angular-1.4.3/angular.js"></script>
+<script src="lib/bootstrap-3.3.5-dist/js/bootstrap.js"></script>
+<script src="lib/angular-ui-bootstrap-0.13.3/ui-bootstrap-0.13.3.js"></script>
+<script src="lib/angular-ui-bootstrap-0.13.3/ui-bootstrap-tpls-0.13.3.js"></script>
 
-<script src="main/main.js"></script>
+<!-- Defined JS lib-->
 
-<script src="/ngapp/common/Module.js"></script>
+<script src="ngapp/common/widget/DropDownField.js"></script>
+<script src="ngapp/common/widget/NumberField.js"></script>
+<script src="ngapp/common/widget/PasswordField.js"></script>
+<script src="ngapp/common/widget/TelNoField.js"></script>
+<script src="ngapp/common/widget/TextField.js"></script>
 
-<script src="/ngapp/common/widget/Module.js"></script>
-<script src="/ngapp/common/widget/DropDownField.js"></script>
-<script src="/ngapp/common/widget/NumberField.js"></script>
-<script src="/ngapp/common/widget/PasswordField.js"></script>
-<script src="/ngapp/common/widget/TelNoField.js"></script>
-<script src="/ngapp/common/widget/TextField.js"></script>
+<script src="ngapp/common/widget/Module.js"></script>
 
-<script src="/ngapp/common/component/Module.js"></script>
+<script src="ngapp/common/component/Module.js"></script>
+
+<script src="ngapp/common/Module.js"></script>
+
 
 <!-- user -->
-<script src="core/user/userService.js"></script>
+<script src="ngapp/core/user/userService.js"></script>
+
+<script>
+    var mainApp = angular.module("mainApp", ['ui.router','userService']);
+
+    mainApp.config(['$stateProvider', function($stateProvider) {
+        $stateProvider
+                .state('main', {
+                    url:'/main',
+                    templateUrl: 'main/main.html',
+                    controller: ['$scope','Restangular','userService', '$rootScope',
+                        function($scope, Restangular, userService, $rootScope) {
+
+                            //load user info and menus
+                            $rootScope.user = currentUser;
+                        }],
+                    resolve: {
+                        currentUser: ['userService', function(userUtils) {
+                            return userService.getCurrentUser();
+                        }]
+                    }
+                })
+    }]);
+</script>
 </body>
 </html>

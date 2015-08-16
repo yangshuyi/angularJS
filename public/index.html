@@ -8,10 +8,11 @@
     <link rel="stylesheet" href="lib/bootstrap-3.3.5-dist/css/bootstrap.css">
 </head>
 
-<body>
-
+<body ng-app="mainApp">
+index
 <div ui-view>
 </div>
+
 
 <script src="lib/lodash-3.10.1/lodash.js"></script>
 <script src="lib/jquery-ui-1.11.4/external/jquery/jquery.js"></script>
@@ -21,6 +22,9 @@
 <script src="lib/angular-ui-bootstrap-0.13.3/ui-bootstrap-0.13.3.js"></script>
 <script src="lib/angular-ui-bootstrap-0.13.3/ui-bootstrap-tpls-0.13.3.js"></script>
 
+<script src="lib/angular-sanitize/angular-sanitize.js"></script>
+<script src="lib/angular-ui-router/release/angular-ui-router.js"></script>
+
 <!-- Defined JS lib-->
 
 <script src="ngapp/common/widget/DropDownField.js"></script>
@@ -28,8 +32,10 @@
 <script src="ngapp/common/widget/PasswordField.js"></script>
 <script src="ngapp/common/widget/TelNoField.js"></script>
 <script src="ngapp/common/widget/TextField.js"></script>
-
 <script src="ngapp/common/widget/Module.js"></script>
+
+<script src="ngapp/common/easyui/Panel.js"></script>
+<script src="ngapp/common/easyui/Module.js"></script>
 
 <script src="ngapp/common/component/Module.js"></script>
 
@@ -40,12 +46,13 @@
 <script src="ngapp/core/user/userService.js"></script>
 
 <script>
-    var mainApp = angular.module("mainApp", ['ui.router','userService']);
+    var mainApp = angular.module("mainApp", ['common']);
 
     mainApp.config(['$stateProvider', function($stateProvider) {
+
         $stateProvider
-                .state('main', {
-                    url:'/main',
+                .state('dashboard', {
+                    url:'/dashboard',
                     templateUrl: 'main/main.html',
                     controller: ['$scope','Restangular','userService', '$rootScope',
                         function($scope, Restangular, userService, $rootScope) {
@@ -59,6 +66,21 @@
                         }]
                     }
                 })
+                .state('bsdemo', {
+                    url:'/bsdemo',
+                    templateUrl: 'ngapp/bsdemo/bsdemo.html',
+                    controller: ['$scope',
+                        function($scope) {
+                            console.log('11111');
+                         }],
+                    onEnter: function(){
+                       console.log("enter bsdemo");
+                    },
+                    onExit: function(){
+                        console.log("leave bsdemo");
+                    }
+
+                });
     }]);
 </script>
 </body>

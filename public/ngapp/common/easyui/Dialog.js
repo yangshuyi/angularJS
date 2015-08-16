@@ -1,7 +1,7 @@
 'use strict';
 angular
-    .module("common.easyui.Panel", [])
-    .directive("easyPanel", function () {
+    .module("common.easyui")
+    .directive("easyDialog", function () {
         return {
             restrict: 'E',
             scope: {

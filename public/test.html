@@ -7,12 +7,21 @@
     <link rel="stylesheet" href="lib/jquery-ui-1.11.4/jquery-ui.css">
     <link rel="stylesheet" href="lib/bootstrap-3.3.5-dist/css/bootstrap.css">
 </head>
-
-<body ng-app="mainApp">
-index
-<div ui-view>
+<body ng-app="app">
+<div ng-controller="myController">
+    <div class="result">
+        <div>父scope：
+            <div>Say：{{name}}<br>改变父scope的name：<input type="text" value="" ng-model="name"/></div>
+        </div>
+        <div>隔离scope：
+            <div isolated-directive name="{{name}}"></div>
+        </div>
+        <div>隔离scope（不使用{{name}}）：
+            <div isolated-directive></div>
+        </div>
+    </div>
 </div>
-
+</body>
 
 <script src="lib/lodash-3.10.1/lodash.js"></script>
 <script src="lib/jquery-ui-1.11.4/external/jquery/jquery.js"></script>
@@ -46,42 +55,21 @@ index
 <script src="ngapp/core/user/userService.js"></script>
 
 <script>
-    var mainApp = angular.module("mainApp", ['common']);
+    angular.module('app').controller("myController", function ($scope) {
+        $scope.name = "hello world";
+    }).directive("isolatedDirective", function () {
+        return {
+            scope: {
+                name: "@"
+            },
+            template: 'Say：{{name}} <br>改变隔离scope的name：<input type="buttom" value="" ng-model="name"/>',
+            link:function(scope){
+                scope.name = "aaaa";
+                console.log('aaa')
+            }
+        }
+    })
 
-    mainApp.config(['$stateProvider', function($stateProvider) {
-
-        $stateProvider
-                .state('dashboard', {
-                    url:'/dashboard',
-                    templateUrl: 'main/main.html',
-                    controller: ['$scope','Restangular','userService', '$rootScope',
-                        function($scope, Restangular, userService, $rootScope) {
-
-                            //load user info and menus
-                            $rootScope.user = currentUser;
-                        }],
-                    resolve: {
-                        currentUser: ['userService', function(userUtils) {
-                            return userService.getCurrentUser();
-                        }]
-                    }
-                })
-                .state('bsdemo', {
-                    url:'/bsdemo',
-                    templateUrl: 'ngapp/bsdemo/bsdemo.html',
-                    controller: ['$scope',
-                        function($scope) {
-                            console.log('11111');
-                         }],
-                    onEnter: function(){
-                       console.log("enter bsdemo");
-                    },
-                    onExit: function(){
-                        console.log("leave bsdemo");
-                    }
-
-                });
-    }]);
 </script>
 </body>
 </html>

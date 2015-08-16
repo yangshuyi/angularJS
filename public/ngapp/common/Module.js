@@ -1,1 +1,1 @@
-angular.module("common", [ 'ui.bootstrap', 'common.widget', 'common.component']);
+angular.module('common', [ 'ui.bootstrap', 'ui.router', 'common.widget', 'common.easyui', 'common.component']);

@@ -1,7 +1,27 @@
-<div>
+
+
+<div ng-controller="bsdemoCtrl" style="width:300px;">
+    <carousel interval="carousel.interval" no-wrap="carousel.nowrap">
+        <slide ng-repeat="slide in carousel.slides" active="slide.active">
+            <img ng-src="{{slide.image}}" style="margin:auto;cursor:pointer;" ng-click="onSlideClick(slide)">
+            <div class="carousel-caption">
+                <span>{{slide.text}}</span>
+            </div>
+        </slide>
+    </carousel>
     Bootstrap Demo
 
-    <easy-panel title="EasyUI Panel" style="width:200px;height:400px;" mycls="panel panel-default">
-        <div>content</div>
+    <easy-panel title="EasyUI Panel" style="width:200px;" body-style="height:100px;">
+        <div>
+            <p>content</p>
+            <p>content</p>
+            <p>content</p>
+            <p>content</p>
+            <p>content</p>
+            <p>content</p>
+            <p>content</p>
+            <p>content</p>
+
+        </div>
     </easy-panel>
 </div>

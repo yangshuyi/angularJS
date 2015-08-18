@@ -2,21 +2,23 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <title ng-bind="title"></title>
-    <link rel="stylesheet" href="lib/jquery-ui-1.11.4/jquery-ui.css">
     <link rel="stylesheet" href="lib/bootstrap-3.3.5-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="style/lib.css">
+    <link rel="stylesheet" href="style/core.css">
 </head>
 
-<body ng-app="mainApp">
-index
-<div ui-view>
-</div>
+<body ng-app="mainApp" ng-controller="indexCtrl">
 
+<header></header>
+
+<ui-view></ui-view>
+
+<footer></footer>
 
 <script src="lib/lodash-3.10.1/lodash.js"></script>
 <script src="lib/jquery-ui-1.11.4/external/jquery/jquery.js"></script>
-<script src="lib/jquery-ui-1.11.4/jquery-ui.js"></script>
 <script src="lib/angular-1.4.3/angular.js"></script>
 <script src="lib/bootstrap-3.3.5-dist/js/bootstrap.js"></script>
 <script src="lib/angular-ui-bootstrap-0.13.3/ui-bootstrap-0.13.3.js"></script>
@@ -27,7 +29,6 @@ index
 
 <!-- Defined JS lib-->
 
-<script src="ngapp/common/widget/DropDownField.js"></script>
 <script src="ngapp/common/widget/NumberField.js"></script>
 <script src="ngapp/common/widget/PasswordField.js"></script>
 <script src="ngapp/common/widget/TelNoField.js"></script>
@@ -38,50 +39,52 @@ index
 <script src="ngapp/common/easyui/Module.js"></script>
 
 <script src="ngapp/common/component/Module.js"></script>
+<script src="ngapp/common/component/Header.js"></script>
+<script src="ngapp/common/component/Footer.js"></script>
 
 <script src="ngapp/common/Module.js"></script>
 
 
 <!-- user -->
+<script src="ngapp/bsdemo/bsdemo.js"></script>
 <script src="ngapp/core/user/userService.js"></script>
 
 <script>
-    var mainApp = angular.module("mainApp", ['common']);
+    var mainApp = angular.module("mainApp", ['common','bsdemo']);
 
-    mainApp.config(['$stateProvider', function($stateProvider) {
+    mainApp.config(['$stateProvider', function ($stateProvider) {
+        $stateProvider.state('dashboard', {
+            url: '/dashboard',
+            templateUrl: 'main/main.html',
+            controller: ['$scope', function ($scope, $rootScope) {
 
-        $stateProvider
-                .state('dashboard', {
-                    url:'/dashboard',
-                    templateUrl: 'main/main.html',
-                    controller: ['$scope','Restangular','userService', '$rootScope',
-                        function($scope, Restangular, userService, $rootScope) {
+                }],
+            resolve: {
 
-                            //load user info and menus
-                            $rootScope.user = currentUser;
-                        }],
-                    resolve: {
-                        currentUser: ['userService', function(userUtils) {
-                            return userService.getCurrentUser();
-                        }]
-                    }
-                })
-                .state('bsdemo', {
-                    url:'/bsdemo',
-                    templateUrl: 'ngapp/bsdemo/bsdemo.html',
-                    controller: ['$scope',
-                        function($scope) {
-                            console.log('11111');
-                         }],
-                    onEnter: function(){
-                       console.log("enter bsdemo");
-                    },
-                    onExit: function(){
-                        console.log("leave bsdemo");
-                    }
+            }
+        })
+        $stateProvider.state('bsdemo', {
+            url: '/bsdemo',
+            templateUrl: 'ngapp/bsdemo/bsdemo.html',
+            controller: ['$scope',
+                function ($scope) {
+                    console.log('11111');
+                }],
+            onEnter: function () {
+                console.log("enter bsdemo");
+            },
+            onExit: function () {
+                console.log("leave bsdemo");
+            }
 
-                });
+        });
+    }]).controller('indexCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
+        $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+            console.log(11);
+        });
     }]);
+
+
 </script>
 </body>
 </html>

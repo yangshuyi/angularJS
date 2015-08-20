@@ -1,3 +1,4 @@
+'use strict';
 angular.module('common.component').directive('header', ['$templateCache', function ($templateCache) {
     var defaultTmplUrl = 'template/common/component/header.html';
     $templateCache.put(defaultTmplUrl,

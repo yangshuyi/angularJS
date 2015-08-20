@@ -12,60 +12,59 @@
  * ]
  * Create by Coral on 2015-04-29
  */
-angular.module('common.widget.NumberField', [])
-    .directive('numberField', [function () {
-        return {
-            restrict: 'EA',
-            require: 'ngModel',
-            scope: {
-                unit: '@',
-                digit: "@",
-                decimal: '@',
-                fieldClass: '@',
-                unitClass: '@',
-                fieldDivClass: '@',
-                ngModel: '=',
-                ngDisabled: "=",
-                max: "@",
-                min: "@",
-                onBlur: "&",
-                lastValue: '=',
-                confirm: '&'
-            },
-            link: function (scope, el, attrs, ngModelCtrl) {
-                scope.unitStyle = function () {
-                    if (typeof scope.unit === 'undefined') {
-                        return "ccc-unit-hide";
-                    } else {
-                        if (typeof scope.unitClass === 'undefined') {
-                            if (scope.unit.length === 1) {
-                                return "ccc-unit";
-                            } else if (scope.unit.length === 2) {
-                                return "ccc-unit-2";
-                            } else if (scope.unit.length === 4) {
-                                return "ccc-unit-4";
-                            }
-                        } else {
-                            return scope.unitClass;
+angular.module('common.widget').directive('numberField', [function () {
+    return {
+        restrict: 'EA',
+        require: 'ngModel',
+        scope: {
+            unit: '@',
+            digit: "@",
+            decimal: '@',
+            fieldClass: '@',
+            unitClass: '@',
+            fieldDivClass: '@',
+            ngModel: '=',
+            ngDisabled: "=",
+            max: "@",
+            min: "@",
+            onBlur: "&",
+            lastValue: '=',
+            confirm: '&'
+        },
+        link: function (scope, el, attrs, ngModelCtrl) {
+            scope.unitStyle = function () {
+                if (typeof scope.unit === 'undefined') {
+                    return "ccc-unit-hide";
+                } else {
+                    if (typeof scope.unitClass === 'undefined') {
+                        if (scope.unit.length === 1) {
+                            return "ccc-unit";
+                        } else if (scope.unit.length === 2) {
+                            return "ccc-unit-2";
+                        } else if (scope.unit.length === 4) {
+                            return "ccc-unit-4";
                         }
-                    }
-                };
-                scope.fieldStyle = function () {
-                    if (typeof scope.fieldClass === 'undefined') {
-                        return "form-control ccc-field";
                     } else {
-                        return scope.fieldClass;
+                        return scope.unitClass;
                     }
-                };
-                scope.lastValue = scope.ngModel;
+                }
+            };
+            scope.fieldStyle = function () {
+                if (typeof scope.fieldClass === 'undefined') {
+                    return "form-control ccc-field";
+                } else {
+                    return scope.fieldClass;
+                }
+            };
+            scope.lastValue = scope.ngModel;
 
-            },
-            template: '<div class="{{fieldDivClass || \'form-inline\'}}">' +
-            '<input ng-blur="blurEvent()" class="{{fieldStyle()}}" ng-model-options="{allowInvalid: false}" min="{{min}}" max="{{max}}" precision="{{decimal}}" number-filed-input type="text" ng-class="fieldStyle()" ng-model="ngModel" ng-disabled="ngDisabled" title="{{ ngDisabled ? ngModel : null}}">' +
-            '<span class="{{unitStyle()}}">({{ unit }})</span>' +
-            '</div>'
-        };
-    }])
+        },
+        template: '<div class="{{fieldDivClass || \'form-inline\'}}">' +
+        '<input ng-blur="blurEvent()" class="{{fieldStyle()}}" ng-model-options="{allowInvalid: false}" min="{{min}}" max="{{max}}" precision="{{decimal}}" number-filed-input type="text" ng-class="fieldStyle()" ng-model="ngModel" ng-disabled="ngDisabled" title="{{ ngDisabled ? ngModel : null}}">' +
+        '<span class="{{unitStyle()}}">({{ unit }})</span>' +
+        '</div>'
+    };
+}])
 
     .directive('numberFiledInput', ['$parse', '$q', function ($parse, $q) {
         'use strict';

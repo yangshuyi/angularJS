@@ -1,3 +1,4 @@
+'use strict';
 angular.module('common.component').directive('footer', ['$templateCache', function ($templateCache) {
     var defaultTmplUrl = 'template/common/component/footer.html';
     $templateCache.put(defaultTmplUrl,

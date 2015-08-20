@@ -1,6 +1,9 @@
 
 
 <div ng-controller="bsdemoCtrl" style="width:300px;">
+    ====
+    <ui-view ></ui-view>
+    =====
     <carousel interval="carousel.interval" no-wrap="carousel.nowrap">
         <slide ng-repeat="slide in carousel.slides" active="slide.active">
             <img ng-src="{{slide.image}}" style="margin:auto;cursor:pointer;" ng-click="onSlideClick(slide)">

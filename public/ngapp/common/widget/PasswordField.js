@@ -1,5 +1,5 @@
 'use strict';
-angular.module('common.widget.PasswordField', []).directive('passwordField',  function() {
+angular.module('common.widget').directive('passwordField',  function() {
     return {
         restrict: 'EA',
         scope: {

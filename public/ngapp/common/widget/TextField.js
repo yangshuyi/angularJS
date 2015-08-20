@@ -1,5 +1,5 @@
 'use strict';
-angular.module('common.widget.TextField', []).directive('textField', [function () {
+angular.module('common.widget').directive('textField', [function () {
     return {
         scope: {
             value: '='
@@ -8,5 +8,5 @@ angular.module('common.widget.TextField', []).directive('textField', [function (
 
         },
         template: '<input type="text" value="{{value}}">'
-    }
+    };
 }])

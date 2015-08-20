@@ -3,7 +3,7 @@
 /**
  * 电话号码值只允许输入数字还有“-”
  */
-angular.module('common.widget.TelNoField', []).directive('telNoField', [function () {
+angular.module('common.widget').directive('telNoField', [function () {
     return {
         restrict: 'EA',
         scope: {

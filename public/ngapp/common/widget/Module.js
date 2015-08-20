@@ -1,1 +1,0 @@
-angular.module('common.widget', ['common.widget.NumberField', 'common.widget.PasswordField', 'common.widget.TelNoField', 'common.widget.TextField']);

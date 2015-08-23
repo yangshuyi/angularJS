@@ -11,6 +11,7 @@ var fs = require('fs');
 //Step1.2: 加载路由
 var index = require('./routes/index');
 var users = require('./routes/users');
+var module1 = require('./routes/module1');
 
 
 //Step1.3: 创建项目实例
@@ -53,11 +54,11 @@ app.use(function (req, res, next) {
 })
 app.use(function (req, res, next) {
     //authentication
-    console.log("authentication");
-    if (!req.session.user) {
-        req.session.error = '请先登陆';
-        return res.redirect('/');
-    }
+    //console.log("authentication");
+    //if (!req.session.user) {
+    //    req.session.error = '请先登陆';
+    //    return res.redirect('/');
+    //}
     next();
 })
 
@@ -68,7 +69,7 @@ app.use(function (req, res, next) {
 app.use('/', index);
 app.use('/users', users);
 
-app.use('/module1', require('./routes/module1.js'));
+app.use('/module1', module1);
 app.use('/module2', require('./routes/module2.js'));
 app.use('/module3', require('./routes/module3.js'));
 

@@ -6,16 +6,24 @@ angular.module('common.widget').directive('passwordField',  function() {
             ngModel: '=',
             placeholder: '@'
         },
-        template: '<div style="position: relative;" class="top-10">\
-                        <input type="{{pwdType}}" ng-model="ngModel" placeholder="{{placeholder}}" class="form-control ccc-field"/>\
-                        <span ng-class="{passwordDisplay:pictureClass, passwordDisable:!pictureClass}" ng-click="changePwdType()" class="top-5"></span>\
-                   </div>',
+        template:
+        '<div style="position: relative;">'+
+        '   <input type="{{pwdType}}" ng-model="ngModel" placeholder="{{placeholder}}" class="form-control"/>'+
+        //'   <span ng-class="{\'glyphicon glyphicon-eye-open\':showPwd, \'glyphicon glyphicon-eye-close\':!showPwd}" ng-click="togglePwd()"></span>'+
+        '</div>',
 
         link: function ($scope) {
             $scope.pwdType= "password";
-            $scope.changePwdType = function () {
-                $scope.pictureClass = !$scope.pictureClass;
-                $scope.pwdType = $scope.pwdType == "password" ? "text" :"password";
+
+            $scope.togglePwd = function () {
+                if($scope.showPwd){
+                    $scope.showPwd = false;
+                    $scope.pwdType = 'text';
+                }else{
+                    $scope.showPwd = true;
+                    $scope.pwdType = 'password';
+                }
+
             };
             //输入框限制UI STANDARD中所描述的8个特殊字符 \ / : * ?' '|
             $scope.$watch('ngModel', function(newVal, oldVal){

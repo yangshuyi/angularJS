@@ -86,7 +86,7 @@ angular.module('common.component').directive('header', ['$templateCache', functi
                     url:'#module5'
                 }
 
-            ]
+            ];
         },
         templateUrl: function (element, attrs) {
             return attrs.templateUrl || defaultTmplUrl;

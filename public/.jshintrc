@@ -1,5 +1,6 @@
 {
   "predef": [
+    "$",
     "angular",
     "_",
     "module",
@@ -10,13 +11,16 @@
     "it",
     "describe",
     "before",
-    "after"
+    "after",
+    "window",
+    "document"
   ],
   "node": true,
   "es5": true,
   "bitwise": true,
   "curly": true,
-  "eqeqeq": true,
+  "eqeqeq": false,
+  "eqnull": true,
   "forin": false,
   "immed": true,
   "latedef": true,

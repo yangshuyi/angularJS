@@ -7,9 +7,9 @@ angular.module('common.widget').directive('passwordField',  function() {
             placeholder: '@'
         },
         template:
-        '<div style="position: relative;">'+
+        '<div class="input-field">'+
         '   <input type="{{pwdType}}" ng-model="ngModel" placeholder="{{placeholder}}" class="form-control"/>'+
-        //'   <span ng-class="{\'glyphicon glyphicon-eye-open\':showPwd, \'glyphicon glyphicon-eye-close\':!showPwd}" ng-click="togglePwd()"></span>'+
+        '   <span ng-class="{\'suffix glyphicon glyphicon-eye-open\':showPwd, \'suffix glyphicon glyphicon-eye-close\':!showPwd}" ng-click="togglePwd()"></span>'+
         '</div>',
 
         link: function ($scope) {

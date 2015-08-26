@@ -1,6 +1,6 @@
 angular.module('main', []);
 
-angular.module('main').controller('mainCtrl', ['$scope', function ($scope) {
+angular.module('main').controller('mainCtrl', ['$scope','$cookieStore', function ($scope, $cookieStore) {
     var carousel = {interval:500000, nowrap:false, slides:[{
         image: '//placekitten.com/601/300',
         text: '111'

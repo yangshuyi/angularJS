@@ -1,8 +1,7 @@
 angular.module("common.component", [])
     .factory("gridUtils", ["$timeout", '$window', function ($timeout, $window) {
         return {
-            calcGridSize: function (gridHolderElement, fixedHeight) {
-                //console.log("calc grid size")
+            calcGridSize: function (gridHolderElement, definedGridHeight) {
                 var gridDiv = gridHolderElement.parent().children('div');
                 var headerTbl = gridDiv.find('.table-head');
                 var footerTbl = gridDiv.find('.table-foot');
@@ -12,22 +11,22 @@ angular.module("common.component", [])
                 var bodyCols = bodyTbl.find("th");
 
                 var availableGridHeight = 0;
-                if (fixedHeight > 0) {
-                    availableGridHeight = fixedHeight;
+                if (definedGridHeight > 0) {
+                    availableGridHeight = definedGridHeight;
                 } else {
                     //自动计算Body的高度
-                    availableGridHeight = $(window).height() - ($(document.body).height() - gridDiv.outerHeight());
+                    var bodyHeight = $(document).outerHeight() > $(window).height() ? $(document).outerHeight() : $(document.body).outerHeight();
+                    availableGridHeight = $(window).height() - (bodyHeight - gridDiv.outerHeight());
 
-                    //console.log(" $(window).height():"+ $(window).height()+" $(document.body).height():"+$(document.body).height()+" $(document).height():"+$(document).height() );
                     if (availableGridHeight <= 0) {
                         availableGridHeight = 200;
                     }
                 }
                 //Grid Body 高度
                 var bodyDivHeight = 0;
-                if(footerTbl){
+                if (footerTbl) {
                     bodyDivHeight = availableGridHeight - headerTbl.outerHeight() - footerTbl.outerHeight() - 2;
-                }else{
+                } else {
                     bodyDivHeight = availableGridHeight - headerTbl.outerHeight() - 2;
                 }
                 var headerTblHeight = 0 - headerTbl.outerHeight();
@@ -44,16 +43,90 @@ angular.module("common.component", [])
                         }
                     }
                 }, 0);
+            },
+
+            initDefaultSetting: function (columns) {
+                var defaultColSetting = {
+                    field: '',
+                    title: '',
+                    sortable: false,
+                    resizable: false,
+                    cellTemplate: null,
+                    cellTemplateScope: null,
+                    headStyle: '',
+                    cellStyle: '',
+                    headColSpan: 1,
+                    hidden: false
+                };
+
+                _.forEach(columns, function (col) {
+
+                    //处理sorting
+                    if (angular.isUndefined(col.enableSorting)) {
+                        col.enableSorting = false;
+                    }
+                });
+
+                _.forEach(columns, function (col) {
+
+                    //处理sorting
+                    if (angular.isUndefined(col.enableSorting)) {
+                        col.enableSorting = false;
+                    }
+                });
+
+                //处理隐藏列
+                _.remove(columns, {'visible': false});
+            },
+
+            initHeadColSpan: function (columns) {
+                var headerColSpan = 1;
+                _.forEach(columns, function (col) {
+                    //处理ColSpan, ColSpan的列不支持排序
+                    if (headerColSpan > 1) {
+                        //被之前的列融合
+                        headerColSpan--;
+                        col.headerColSpan = -1;
+                    } else {
+                        //没有被之前的列融合
+                        if (col.headerColSpan == null) {
+                            col.headerColSpan = 1;
+                        }
+                        if (col.headerColSpan > 1) {
+                            headerColSpan = col.headerColSpan;
+                        }
+                    }
+                });
+            },
+
+            buildColumnSort: function (currentCol, columns) {
+                if (!currentCol.enableSorting) {
+                    return;
+                }
+
+                var COL_SORT_ASC = 'asc';
+                var COL_SORT_DESC = 'desc';
+
+                _.forEach(columns, function (col) {
+                    if (col == currentCol) {
+                        if (col.sort == null || col.sort == COL_SORT_DESC) {
+                            col.sort = COL_SORT_ASC;
+                        } else {
+                            col.sort = COL_SORT_DESC;
+                        }
+                    } else {
+                        col.sort = null;
+                    }
+                });
             }
-        }
+        };
     }])
     .directive('compile', [
         '$compile',
         function ($compile) {
             return {
-                /*require: '^form',*/
                 restrict: 'A',
-                link    : function (scope, element, attrs) {
+                link: function (scope, element, attrs) {
                     scope.cellTemplateScope = scope.$eval(attrs.cellTemplateScope);
                     // Watch for changes to expression.
                     scope.$watch(attrs.compile, function (new_val) {
@@ -64,9 +137,4 @@ angular.module("common.component", [])
                 }
             };
         }
-    ])
-    .filter('decimalFilter', ['$filter', function($filter) {
-        return function(input){
-            return $filter('number')(input, 2);
-        }
-    }]);;
+    ]);

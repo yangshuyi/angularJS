@@ -14,6 +14,8 @@
 
     <header></header>
 
+
+
     <div class="container">
         <div class="row">
             <ol class="col-sm-12 col-xs-12 breadcrumb">
@@ -48,6 +50,10 @@
     <script src="ngapp/common/widget/TelNoField.js"></script>
     <script src="ngapp/common/widget/TextField.js"></script>
     <script src="ngapp/common/widget/CaptchaField.js"></script>
+    <script src="ngapp/common/easyui/Panel.js"></script>
+    <script src="ngapp/common/easyui/Dialog.js"></script>
+    <script src="ngapp/common/easyui/DialogProvider.js"></script>
+
 
 
     <script src="ngapp/common/component/Header.js"></script>
@@ -63,18 +69,18 @@
     <script src="ngapp/core/user/userService.js"></script>
 
     <script>
-        angular.module("mainApp", ['common', 'main', 'bsdemo']);
+        angular.module("mainApp", ['common', 'bsdemo']);
 
         angular.module("mainApp").config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
-            $urlRouterProvider.otherwise('/');
+           // $urlRouterProvider.otherwise('/bsdemo');
             $stateProvider.state('index', {
-                url: '/',
+                url: '/main',
                 views: {
                     mainView: {
                         templateUrl: 'ngapp/core/main/main.html',
                         controller: ['$scope', function ($scope, $rootScope) {
 
-                        }],
+                        }]
                     }
                 }
             })
@@ -85,7 +91,7 @@
                         templateUrl: 'ngapp/core/dashboard/dashboard.html',
                         controller: ['$scope', function ($scope, $rootScope) {
 
-                        }],
+                        }]
                     }
                 }
             })
@@ -94,14 +100,8 @@
                 views: {
                     mainView: {
                         templateUrl: 'ngapp/bsdemo/bsdemo.html',
-                        controller: ['$scope', function ($scope) {
-                        }],
-                        onEnter: function () {
-                            console.log("enter bsdemo");
-                        },
-                        onExit: function () {
-                            console.log("leave bsdemo");
-                        }
+                        controller: ['$scope', function ($scope, $rootScope) {
+                        }]
                     }
                 }
 
@@ -127,7 +127,7 @@
             });
         }]).controller('indexCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
             $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-                //console.log('stateChangeStart from state [' + fromState.name + '-' + fromState.url + '] to state[' + toState.name + '-' + toState.url + ']');
+                console.log('stateChangeStart from state [' + fromState.name + '-' + fromState.url + '] to state[' + toState.name + '-' + toState.url + ']');
 
             });
         }]);

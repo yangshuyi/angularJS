@@ -1,7 +1,22 @@
 'use strict';
-angular.module("common.easyui").directive("easyPanel", function () {
+angular.module("common.easyui").directive("easyPanel", ['$templateCache', function ($templateCache) {
+    var defaultTmplUrl = 'template/common/easyui/Panel.html';
+    $templateCache.put(defaultTmplUrl,
+        '<div style="{{style}}" class="panel panel-default" class="{{panelCls}}">' +
+        '   <div ng-if="!noHeader || true" class="panel-heading" class="{{headCls}}" style="display:flex;">' +
+        '       <div style="flex:1">{{title}}</div>' +
+        '       <div>' +
+        '           <span ng-if="collapsible || true" ng-click="toggle()" ng-class="{true:\'glyphicon glyphicon-triangle-top\',false:\'glyphicon glyphicon-triangle-bottom\'}[collapsed===undefined?false:collapsed]"/>' +
+        '       </div>' +
+        '   </div>' +
+        '   <div class="panel-body" class="{{bodyCls}}" style="{{bodyStyle}};overflow: auto;" ng-show="collapsed===undefined?true:!collapsed">' +
+        '       <div ng-transclude/>' +
+        '   </div>' +
+        '</div>'
+    );
+
     return {
-        restrict: 'E',
+        restrict: 'EA',
         scope: {
             title: '@',
             header: '=', //The panel header
@@ -43,17 +58,6 @@ angular.module("common.easyui").directive("easyPanel", function () {
                 return $scope.collapsed;
             };
         },
-        template: '' +
-        '<div style="{{style}}" class="panel panel-default" class="{{panelCls}}">' +
-        '   <div ng-if="!noHeader || true" class="panel-heading" class="{{headCls}}" style="display:flex;">' +
-        '       <div style="flex:1">{{title}}</div>' +
-        '       <div>' +
-        '           <span ng-if="collapsible || true" ng-click="toggle()" ng-class="{true:\'glyphicon glyphicon-triangle-top\',false:\'glyphicon glyphicon-triangle-bottom\'}[collapsed===undefined?false:collapsed]"/>' +
-        '       </div>' +
-        '   </div>' +
-        '   <div class="panel-body" class="{{bodyCls}}" style="{{bodyStyle}};overflow: auto;" ng-show="collapsed===undefined?true:!collapsed">' +
-        '       <div ng-transclude>/' +
-        '   </div>' +
-        '</div>'
+        templateUrl: defaultTmplUrl
     };
-})
+}]);

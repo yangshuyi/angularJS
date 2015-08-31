@@ -1,40 +1,29 @@
+<div class="container" ng-controller="bsdemoCtrl">
+    <div class="row" >
+        <div class="col-sm-8 col-xs-8" style="padding:0px;">
+            <h3>EASY-PANEL</h3>
 
+            <easy-panel title="EasyUI Panel" style="width:200px;" body-style="height:100px;background-color:white;">
+                <div>
+                    <p>content</p>
+                    <p>content</p>
+                    <p>content</p>
+                    <p>content</p>
+                    <p>content</p>
+                    <p>content</p>
+                    <p>content</p>
+                    <p>content</p>
+                </div>
+            </easy-panel>
 
-<div ng-controller="bsdemoCtrl" style="width:300px;">
-    ====
-    <ui-view ></ui-view>
-    =====
-    <carousel interval="carousel.interval" no-wrap="carousel.nowrap">
-        <slide ng-repeat="slide in carousel.slides" active="slide.active">
-            <img ng-src="{{slide.image}}" style="margin:auto;cursor:pointer;" ng-click="onSlideClick(slide)">
-            <div class="carousel-caption">
-                <span>{{slide.text}}</span>
-            </div>
-        </slide>
-    </carousel>
-    Bootstrap Demo
+            <h3>EASY-DIALOG</h3>
+            <button ng-click="showEasyDialog($event)">showEasyDialog</button>
 
-
-
-    <ol class="breadcrumb">
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Library</a></li>
-        <li class="active">Data</li>
-    </ol>
-
-
-
-    <easy-panel title="EasyUI Panel" style="width:200px;" body-style="height:100px;">
-        <div>
-            <p>content</p>
-            <p>content</p>
-            <p>content</p>
-            <p>content</p>
-            <p>content</p>
-            <p>content</p>
-            <p>content</p>
-            <p>content</p>
-
+            <h3>EASY-DIALOG:Z-INDEX</h3>
+            <button ng-click="showMultiEasyDialog($event)">showEasyDialog</button>
         </div>
-    </easy-panel>
+
+    </div>
+
+
 </div>

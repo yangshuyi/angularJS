@@ -10,7 +10,12 @@
 </head>
 
 <body ng-app="mainApp" ng-controller="indexCtrl">
+<div>
+
     <header></header>
+
+
+
     <div class="container">
         <div class="row">
             <ol class="col-sm-12 col-xs-12 breadcrumb">
@@ -20,7 +25,9 @@
             </ol>
         </div>
     </div>
+
     <div ui-view="mainView"></div>
+
     <footer></footer>
 
     <script src="lib/lodash-3.10.1/lodash.js"></script>
@@ -49,6 +56,7 @@
     <script src="ngapp/common/easyui/DialogProvider.js"></script>
 
 
+
     <script src="ngapp/common/component/Header.js"></script>
     <script src="ngapp/common/component/Footer.js"></script>
     <script src="ngapp/common/component/grid/PaginationGrid.js"></script>
@@ -64,10 +72,14 @@
     <script src="ngapp/core/user/userService.js"></script>
 
     <script>
+<<<<<<< .merge_file_a10964
         angular.module("mainApp", ['common', 'core', 'bsdemo']);
+=======
+        angular.module("mainApp", ['common', 'bsdemo']);
+>>>>>>> .merge_file_a03624
 
         angular.module("mainApp").config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
-            $urlRouterProvider.otherwise('/bsdemo');
+           // $urlRouterProvider.otherwise('/bsdemo');
             $stateProvider.state('index', {
                 url: '/main',
                 views: {
@@ -75,7 +87,7 @@
                         templateUrl: 'ngapp/core/main/main.html',
                         controller: ['$scope', function ($scope, $rootScope) {
 
-                        }],
+                        }]
                     }
                 }
             })
@@ -86,7 +98,7 @@
                         templateUrl: 'ngapp/core/dashboard/dashboard.html',
                         controller: ['$scope', function ($scope, $rootScope) {
 
-                        }],
+                        }]
                     }
                 }
             })
@@ -99,6 +111,8 @@
                         }]
                     }
                 }
+
+
             });
             $stateProvider.state('topic', {
                 url: '/topic',
@@ -115,12 +129,17 @@
                         }
                     }
                 }
+
+
             });
         }]).controller('indexCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
             $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
                 console.log('stateChangeStart from state [' + fromState.name + '-' + fromState.url + '] to state[' + toState.name + '-' + toState.url + ']');
+
             });
         }]);
+
+
     </script>
 </body>
 </html>

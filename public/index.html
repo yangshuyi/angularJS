@@ -31,13 +31,14 @@
     <script src="lib/lodash-3.10.1/lodash.js"></script>
     <script src="lib/jquery-ui-1.11.4/external/jquery/jquery.js"></script>
     <script src="lib/angular-1.4.3/angular.js"></script>
+    <script src="lib/angular-1.4.3/angular-cookies.js"></script>
+    <script src="lib/angular-1.4.3/angular-sanitize.js"></script>
+
     <script src="lib/bootstrap-3.3.5-dist/js/bootstrap.js"></script>
     <script src="lib/angular-ui-bootstrap-0.13.3/ui-bootstrap-0.13.3.js"></script>
     <script src="lib/angular-ui-bootstrap-0.13.3/ui-bootstrap-tpls-0.13.3.js"></script>
 
-    <script src="lib/angular-sanitize/angular-sanitize.js"></script>
     <script src="lib/angular-ui-router/release/angular-ui-router.js"></script>
-
     <!-- Defined JS lib-->
 
     <script src="ngapp/common/Module.js"></script>
@@ -55,15 +56,17 @@
     <script src="ngapp/common/component/grid/PaginationGrid.js"></script>
     <script src="ngapp/common/component/grid/GridUtils.js"></script>
 
+    <!--core-->
+    <script src="ngapp/core/Module.js"></script>
 
     <!-- user -->
-    <script src="ngapp/core/main/main.js"></script>
+    <script src="ngapp/core/main/mainCtrl.js"></script>
     <script src="ngapp/bsdemo/bsdemo.js"></script>
     <script src="ngapp/topic/topic.js"></script>
     <script src="ngapp/core/user/userService.js"></script>
 
     <script>
-        angular.module("mainApp", ['common', 'main', 'bsdemo']);
+        angular.module("mainApp", ['common', 'core', 'bsdemo']);
 
         angular.module("mainApp").config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
             $urlRouterProvider.otherwise('/');

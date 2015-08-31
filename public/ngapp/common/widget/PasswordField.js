@@ -13,15 +13,16 @@ angular.module('common.widget').directive('passwordField',  function() {
         '</div>',
 
         link: function ($scope) {
+            $scope.showPwd = false;
             $scope.pwdType= "password";
 
             $scope.togglePwd = function () {
                 if($scope.showPwd){
                     $scope.showPwd = false;
-                    $scope.pwdType = 'text';
+                    $scope.pwdType = 'password';
                 }else{
                     $scope.showPwd = true;
-                    $scope.pwdType = 'password';
+                    $scope.pwdType = 'text';
                 }
 
             };

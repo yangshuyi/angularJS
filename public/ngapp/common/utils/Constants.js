@@ -1,6 +1,6 @@
-angular.module('common.utils').factory('constants', [function () {
+angular.module('common.utils').constant('constants', [function () {
     return {
 
-        
+
     };
 }]);

@@ -9,7 +9,7 @@ angular.module('common.widget').directive('captchaField',  function() {
         template:
         '<div style="display:flex;align-items: center;">'+
         '   <input type="{{pwdType}}" ng-model="ngModel" placeholder="{{placeholder}}" class="form-control" style="flex:1"/>'+
-        '   <img style="width:50px;height:34px;" ng-click="changeCaptcha()" class="top-5"></span>'+
+        '   <img style="width:50px;height:34px;margin-left:5px;" ng-click="changeCaptcha()"></span>'+
         '</div>',
 
         link: function ($scope) {

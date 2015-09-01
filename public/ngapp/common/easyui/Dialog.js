@@ -2,7 +2,7 @@
 angular.module("common.easyui").directive("easyDialog", ['$templateCache', '$compile', function ($templateCache, $compile) {
     var defaultTmplUrl = 'template/common/easyui/Dialog.html';
     $templateCache.put(defaultTmplUrl,
-        '<div ng-show="isVisible" style="{{style}};width:{{width}};height:{{height}};" class="panel panel-default" class="{{panelCls}}">' +
+        '<div ng-init="$scope.isVisible" ng-show="isVisible" style="{{style}};width:{{width}};height:{{height}};" class="panel panel-default" class="{{panelCls}}">' +
         '   <div ng-mousedown="headMouseDown($event)" class="panel-heading" class="{{headCls}}" style="display:flex;">' +
         '       <div style="flex:1">{{title}}</div>' +
         '       <div>' +
@@ -51,33 +51,8 @@ angular.module("common.easyui").directive("easyDialog", ['$templateCache', '$com
             console.log($scope);
         },
         link: function ($scope, $element, attrs) {
-            if (!attrs.closeOnEscape) {
-                attrs.$set('close-on-escape', 'false');
-            }
-            if (!attrs.destroyOnClose) {
-                attrs.$set('destroy-on-close', 'true');
-            }
-            if (!attrs.closeText) {
-                attrs.$set('close-text', 'close');
-            }
-            if (!attrs.dialogClass) {
-                attrs.$set('dialogClass', '');
-            }
-            if (!attrs.enableDrag) {
-                attrs.$set('enable-drag', 'true');
-            }
-            if (!attrs.height) {
-                attrs.$set('height', '400px');
-            }
-            if (!attrs.width) {
-                attrs.$set('width', '100%');
-            }
-            if (!attrs.modal) {
-                attrs.$set('modal', 'true');
-            }
-            if (!attrs.resizable) {
-                attrs.$set('resizable', 'resizable');
-            }
+
+
 
             $scope.api = $scope.api || {};
 
@@ -91,6 +66,51 @@ angular.module("common.easyui").directive("easyDialog", ['$templateCache', '$com
             $scope.mouseUpHandler = null;
             if (!$scope.autoOpen) {
                 $scope.isVisible = false;
+            }
+
+            $scope.init = function(){
+                if(!$scope.closeOnEscape){
+                    $scope.closeOnEscape = false;
+                }
+                if(!$scope.destroyOnClose){
+                    $scope.destroyOnClose = true;
+                }
+                if(!$scope.closeText){
+                    $scope.closeText = 'close';
+                }
+                if(!$scope.dialogClass){
+                    $scope.dialogClass = '';
+                }
+                if(!$scope.enableDrag){
+                    $scope.enableDrag = true;
+                }
+                if(!$scope.width){
+                    $scope.width = '100%';
+                }
+                if(!$scope.height){
+                    $scope.height = '400px';
+                }
+                if(!$scope.modal){
+                    $scope.modal = false;
+                }
+                if(!$scope.resizable){
+                    $scope.resizable = true;
+                }
+                //if (!attrs.enableDrag) {
+                //    attrs.$set('enable-drag', 'true');
+                //}
+                //if (!attrs.height) {
+                //    attrs.$set('height', '400px');
+                //}
+                //if (!attrs.width) {
+                //    attrs.$set('width', '100%');
+                //}
+                //if (!attrs.modal) {
+                //    attrs.$set('modal', 'true');
+                //}
+                //if (!attrs.resizable) {
+                //    attrs.$set('resizable', 'resizable');
+                //}
             }
 
             //public method

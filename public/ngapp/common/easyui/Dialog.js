@@ -2,15 +2,15 @@
 angular.module("common.easyui").directive("easyDialog", ['$templateCache', '$compile', function ($templateCache, $compile) {
     var defaultTmplUrl = 'template/common/easyui/Dialog.html';
     $templateCache.put(defaultTmplUrl,
-        '<div ng-init="$scope.isVisible" ng-show="isVisible" style="{{style}};width:{{width}};height:{{height}};" class="panel panel-default" class="{{panelCls}}">' +
+        '<div ng-show="isVisible" style="{{style}};width:{{width}};height:{{height}};" class="panel panel-default" class="{{panelCls}}">' +
         '   <div ng-mousedown="headMouseDown($event)" class="panel-heading" class="{{headCls}}" style="display:flex;">' +
         '       <div style="flex:1">{{title}}</div>' +
         '       <div>' +
-        '           <span ng-if="collapsible?collapsible:true" ng-click="toggle()" ng-class="{true:\'glyphicon glyphicon-triangle-top\',false:\'glyphicon glyphicon-triangle-bottom\'}[collapsed===undefined?false:collapsed]" style="cursor: pointer;"/>' +
-        '           <span ng-if="closable?closable:true" title="{{closeText}}" ng-click="close()" class="glyphicon glyphicon-remove" style="cursor: pointer;"/>' +
+        '           <span ng-if="collapsible" ng-click="toggle()" ng-class="{true:\'glyphicon glyphicon-triangle-top\',false:\'glyphicon glyphicon-triangle-bottom\'}[collapsed]" style="cursor: pointer;"/>' +
+        '           <span ng-if="closable" title="{{closeText}}" ng-click="close()" class="glyphicon glyphicon-remove" style="cursor: pointer;"/>' +
         '       </div>' +
         '   </div>' +
-        '   <div class="panel-body" class="{{bodyCls}}" style="{{bodyStyle}};overflow: auto;" ng-show="collapsed===undefined?true:!collapsed">' +
+        '   <div class="panel-body" class="{{bodyCls}}" style="{{bodyStyle}};overflow: auto;" ng-show="!collapsed">' +
         '       <div ng-transclude>/' +
         '   </div>' +
         '</div>'
@@ -21,15 +21,19 @@ angular.module("common.easyui").directive("easyDialog", ['$templateCache', '$com
         scope: {
             title: '@',
             header: '=', //The panel header
+            isVisible: '@',
             collapsible: '=',  //Defines if to show collapsible button.
             collapsed: '=', //Defines if the panel is collapsed at initialization.
-            closable: '=',
+            closable: '@',
             destroyOnClose: '@',
+            closeText: '@',
+            enableDrag: '@',
+            modal: '@',
+
             panelCls: '@',  //Add a CSS class to the panel.
             headCls: '@',  //Add a CSS class to the panel header.
             bodyCls: '@', //Add a CSS class to the panel body.
             bodyStyle: '@',
-            style: '@',  //Add a custom specification style to the panel.
 
             minHeight: '@',
             height: '@',
@@ -38,10 +42,6 @@ angular.module("common.easyui").directive("easyDialog", ['$templateCache', '$com
             width: '@',
             maxWidth: '@',
 
-            closeText: '@?',
-            enableDrag: '@',
-
-            'modal': '@',
 
             api: '='
         },
@@ -51,73 +51,63 @@ angular.module("common.easyui").directive("easyDialog", ['$templateCache', '$com
             console.log($scope);
         },
         link: function ($scope, $element, attrs) {
-
-
-
-            $scope.api = $scope.api || {};
-
-            $element.css('position', 'absolute');
-            $scope.zIndex = 1;
-            $scope.dragging = false;
-            $scope.isVisible = true;
-
-            $scope.diviation = {x: 0, y: 0};
-            $scope.mouseMoveHandler = null;
-            $scope.mouseUpHandler = null;
-            if (!$scope.autoOpen) {
-                $scope.isVisible = false;
+            //Options
+            if (!attrs.title) {
+                attrs.$set('title', '');
+            }
+            if (!attrs.isVisible) {
+                attrs.$set('isVisible', true);
+            }
+            if (!attrs.collapsible) {
+                attrs.$set('collapsible', false);
+            }
+            if (!attrs.closable) {
+                attrs.$set('closable', true);
+            }
+            if (!attrs.closeOnEscape) {
+                attrs.$set('closeOnEscape', false);
+            }
+            if (!attrs.destroyOnClose) {
+                attrs.$set('destroyOnClose', true);
+            }
+            if (!attrs.closeText) {
+                attrs.$set('closeText', 'close');
+            }
+            if (!attrs.enableDrag) {
+                attrs.$set('enableDrag', true);
+            }
+            if (!attrs.modal) {
+                attrs.$set('modal', true);
             }
 
-            $scope.init = function(){
-                if(!$scope.closeOnEscape){
-                    $scope.closeOnEscape = false;
-                }
-                if(!$scope.destroyOnClose){
-                    $scope.destroyOnClose = true;
-                }
-                if(!$scope.closeText){
-                    $scope.closeText = 'close';
-                }
-                if(!$scope.dialogClass){
-                    $scope.dialogClass = '';
-                }
-                if(!$scope.enableDrag){
-                    $scope.enableDrag = true;
-                }
-                if(!$scope.width){
-                    $scope.width = '100%';
-                }
-                if(!$scope.height){
-                    $scope.height = '400px';
-                }
-                if(!$scope.modal){
-                    $scope.modal = false;
-                }
-                if(!$scope.resizable){
-                    $scope.resizable = true;
-                }
-                //if (!attrs.enableDrag) {
-                //    attrs.$set('enable-drag', 'true');
-                //}
-                //if (!attrs.height) {
-                //    attrs.$set('height', '400px');
-                //}
-                //if (!attrs.width) {
-                //    attrs.$set('width', '100%');
-                //}
-                //if (!attrs.modal) {
-                //    attrs.$set('modal', 'true');
-                //}
-                //if (!attrs.resizable) {
-                //    attrs.$set('resizable', 'resizable');
-                //}
+            //Class
+            if (!attrs.panelCls) {
+                attrs.$set('panelCls', '');
+            }
+            if (!attrs.headCls) {
+                attrs.$set('headCls', '');
+            }
+
+            if (!attrs.bodyCls) {
+                attrs.$set('bodyCls', '');
+            }
+            if (!attrs.bodyStyle) {
+                attrs.$set('bodyStyle', '');
+            }
+
+            if (!attrs.height) {
+                attrs.$set('height', '300px');
+            }
+            if (!attrs.width) {
+                attrs.$set('width', '100%');
+
             }
 
             //public method
             $scope.headMouseDown = function ($event) {
-                console.log('a');
+                $scope.api.setToTop();
+
                 if ($scope.enableDrag) {
-                    console.log('b');
                     $scope.headMouseUp();
 
                     $scope.dragging = true;
@@ -220,12 +210,28 @@ angular.module("common.easyui").directive("easyDialog", ['$templateCache', '$com
             };
 
             $scope.api.setToTop = function () {
-                var maxZIndex = _.max($('div'), function (divElement) {
+                var  maxZIndexElement= _.max($('div'), function (divElement) {
                     return divElement.style.zIndex;
                 });
 
-                $element.css('z-index', maxZIndex++);
+                if(maxZIndexElement != $element){
+                    var zIndex = parseInt($element.css('z-index'));
+                    if(isNaN(zIndex)){
+                        zIndex = 0;
+                    }
+                    $element.css('z-index', zIndex+1);
+                }
+
             };
+
+
+            $element.css('position', 'absolute');
+            $scope.api.setToTop();
+
+            $scope.diviation = {x: 0, y: 0};
+            $scope.mouseMoveHandler = null;
+            $scope.mouseUpHandler = null;
+
 
         },
         templateUrl: function (element, attrs) {

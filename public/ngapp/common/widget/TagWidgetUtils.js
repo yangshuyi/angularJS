@@ -3,56 +3,7 @@ angular.module("common.component", []).factory("tagWidgetUtils", [function ($tim
 
 
         update: function () {
-            var a;
-            var b;
 
-            if (active) {
-                a = (-Math.min(Math.max(-mouseY, -size), size) / radius ) * tspeed;
-                b = (Math.min(Math.max(-mouseX, -size), size) / radius ) * tspeed;
-            }
-            else {
-                a = lasta * 0.98;
-                b = lastb * 0.98;
-            }
-
-            lasta = a;
-            lastb = b;
-
-            if (Math.abs(a) <= 0.01 && Math.abs(b) <= 0.01) {
-                return;
-            }
-
-            var c = 0;
-            sineCosine(a, b, c);
-            for (var j = 0; j < mcList.length; j++) {
-                var rx1 = mcList[j].cx;
-                var ry1 = mcList[j].cy * ca + mcList[j].cz * (-sa);
-                var rz1 = mcList[j].cy * sa + mcList[j].cz * ca;
-
-                var rx2 = rx1 * cb + rz1 * sb;
-                var ry2 = ry1;
-                var rz2 = rx1 * (-sb) + rz1 * cb;
-
-                var rx3 = rx2 * cc + ry2 * (-sc);
-                var ry3 = rx2 * sc + ry2 * cc;
-                var rz3 = rz2;
-
-                mcList[j].cx = rx3;
-                mcList[j].cy = ry3;
-                mcList[j].cz = rz3;
-
-                per = d / (d + rz3);
-
-                mcList[j].x = (howElliptical * rx3 * per) - (howElliptical * 2);
-                mcList[j].y = ry3 * per;
-                mcList[j].scale = per;
-                mcList[j].alpha = per;
-
-                mcList[j].alpha = (mcList[j].alpha - 0.6) * (10 / 6);
-            }
-
-            doPosition();
-            depthSort();
         },
 
         depthSort: function () {
@@ -108,12 +59,12 @@ angular.module("common.component", []).factory("tagWidgetUtils", [function ($tim
             direction.cc = Math.cos(direction.c * dtr);
         },
 
-        positionAll : function (items, $element) {
-            var max = items.length;
+        positionAll : function (tags, $element) {
+            var max = tags.length;
             var phi;
             var theta;
             for (var i = 1; i < max + 1; i++) {
-                var item = items[i - 1];
+                var tag = tags[i - 1];
                 var tagEle = $element.find('a')[i - 1];
                 if (true) {
                     phi = Math.acos(-1 + (2 * i - 1) / max);
@@ -123,13 +74,13 @@ angular.module("common.component", []).factory("tagWidgetUtils", [function ($tim
                     phi = Math.random() * (Math.PI);
                     theta = Math.random() * (2 * Math.PI);
                 }
-                //×ø±ê±ä»»
-                item.itemOptions.cx = $scope.radius * Math.cos(theta) * Math.sin(phi);
-                item.itemOptions.cy = $scope.radius * Math.sin(theta) * Math.sin(phi);
-                item.itemOptions.cz = $scope.radius * Math.cos(phi);
+                //ï¿½ï¿½ï¿½ä»»
+                tag.itemOptions.cx = $scope.radius * Math.cos(theta) * Math.sin(phi);
+                tag.itemOptions.cy = $scope.radius * Math.sin(theta) * Math.sin(phi);
+                tag.itemOptions.cz = $scope.radius * Math.cos(phi);
 
-                tagEle.style.left = item.itemOptions.cx + $element.width() / 2 - tagEle.width() / 2 + 'px';
-                tagEle.style.top = item.itemOptions.cy + $element.height() / 2 - tagEle.height() / 2 + 'px';
+                tagEle.style.left = tag.itemOptions.cx + $element.width() / 2 - tagEle.width() / 2 + 'px';
+                tagEle.style.top = tag.itemOptions.cy + $element.height() / 2 - tagEle.height() / 2 + 'px';
             }
         }
     };

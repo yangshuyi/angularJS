@@ -5,9 +5,9 @@ angular.module("common.easyui").directive("easyDialog", ['$templateCache', '$com
         '<div ng-show="isVisible" style="{{style}};width:{{width}};height:{{height}};" class="panel panel-default" class="{{panelCls}}">' +
         '   <div ng-mousedown="headMouseDown($event)" class="panel-heading" class="{{headCls}}" style="display:flex;">' +
         '       <div style="flex:1">{{title}}</div>' +
-        '       <div>' +
+        '       <div style="margin-left:15px;">' +
         '           <span ng-if="collapsible" ng-click="toggle()" ng-class="{true:\'glyphicon glyphicon-triangle-top\',false:\'glyphicon glyphicon-triangle-bottom\'}[collapsed]" style="cursor: pointer;"/>' +
-        '           <span ng-if="closable" title="{{closeText}}" ng-click="close()" class="glyphicon glyphicon-remove" style="cursor: pointer;"/>' +
+        '           <span ng-if="closable" title="{{closeText}}" ng-click="api.close()" class="glyphicon glyphicon-remove" style="cursor: pointer;"/>' +
         '       </div>' +
         '   </div>' +
         '   <div class="panel-body" class="{{bodyCls}}" style="{{bodyStyle}};overflow: auto;" ng-show="!collapsed">' +
@@ -15,10 +15,17 @@ angular.module("common.easyui").directive("easyDialog", ['$templateCache', '$com
         '   </div>' +
         '</div>'
     );
+    //
+    //var defaultMaskTmplUrl = 'template/common/easyui/Dialog-Mask.html';
+    //$templateCache.put(defaultTmplUrl,
+    //    '<div ng-show="isVisible" style="width:{{width}};height:{{height}};" class="panel panel-default" class="{{panelCls}}">' +
+    //   '</div>'
+    //);
 
     return {
         restrict: 'EA',
         scope: {
+            dialogId: '@',
             title: '@',
             header: '=', //The panel header
             isVisible: '@',
@@ -52,6 +59,9 @@ angular.module("common.easyui").directive("easyDialog", ['$templateCache', '$com
         },
         link: function ($scope, $element, attrs) {
             //Options
+            if (!attrs.dialogId) {
+                attrs.$set('dialogId', 'easy-dialog_' + (new Date()).getTime());
+            }
             if (!attrs.title) {
                 attrs.$set('title', '');
             }
@@ -105,7 +115,7 @@ angular.module("common.easyui").directive("easyDialog", ['$templateCache', '$com
 
             //public method
             $scope.headMouseDown = function ($event) {
-                $scope.api.setToTop();
+                $scope.api.setToTopLayer();
 
                 if ($scope.enableDrag) {
                     $scope.headMouseUp();
@@ -191,10 +201,6 @@ angular.module("common.easyui").directive("easyDialog", ['$templateCache', '$com
 
             $scope.api.open = function () {
                 $scope.isVisible = true;
-
-                if ($element.parent() == null) {
-                    window.alert('error');
-                }
             };
 
             $scope.api.isOpened = function () {
@@ -203,35 +209,73 @@ angular.module("common.easyui").directive("easyDialog", ['$templateCache', '$com
 
             $scope.api.close = function () {
                 $scope.isVisible = false;
-
-                if ($scope.destroyOnClose) {
-                    $element.remove();
-                }
             };
 
-            $scope.api.setToTop = function () {
-                var  maxZIndexElement= _.max($('div'), function (divElement) {
-                    return divElement.style.zIndex;
+            $scope.api.setToTopLayer = function () {
+                var maxZIndexElement = _.max($('easy-dialog'), function (divElement) {
+                    var zIndex = parseInt(divElement.style.zIndex);
+                    return isNaN(zIndex) ? 0 : zIndex;
                 });
 
-                if(maxZIndexElement != $element){
-                    var zIndex = parseInt($element.css('z-index'));
-                    if(isNaN(zIndex)){
-                        zIndex = 0;
-                    }
-                    $element.css('z-index', zIndex+1);
+                var zIndex = parseInt(maxZIndexElement.style.zIndex);
+                zIndex = (isNaN(zIndex) ? 0 : zIndex)
+                if (zIndex == 0 || $(maxZIndexElement).attr('dialog-id') != $element.attr('dialog-id')) {
+                    $element.css('z-index', zIndex + 1);
                 }
-
             };
 
+            $scope.api.setToCenter = function () {
+                var windowWidth = $(window).width();
+                var windowHeight = $(window).height();
+                var dialogWidth = $element.width();
+                var dialogHeight = $element.height();
+                var left = (windowWidth - dialogWidth) / 2 + $(document).scrollLeft();
+                var top = (windowHeight - dialogHeight) / 2 + $(document).scrollTop();
+
+                $element.css({'left': left+'px', 'top': top + 'px'});
+            };
 
             $element.css('position', 'absolute');
-            $scope.api.setToTop();
+            $scope.api.setToCenter();
+            $scope.maskElement = null;
 
             $scope.diviation = {x: 0, y: 0};
             $scope.mouseMoveHandler = null;
             $scope.mouseUpHandler = null;
 
+
+            $scope.$watch('isVisible', function (newValue, oldValue) {
+                if (newValue == true && $element.parent() == null) {
+                    window.alert('error');
+                    return;
+                }
+
+                if (newValue == true) {
+                    $scope.api.setToTopLayer();
+                }
+
+                if (newValue == true && $scope.modal == true) {
+                    if ($scope.maskElement == null) {
+                        var maskElement = '<div style="background: rgba(0,0,0,0.4);z-index:0;position:absolute;top:0;left:0;"></div>';
+                        $scope.maskElement = $(maskElement);
+                    }
+                    var width = $(document).outerWidth() > $(window).width() ? $(document).outerWidth() : $(document.body).width();
+                    var height = $(document).outerHeight() > $(window).height() ? $(document).outerHeight() : $(window).height();
+                    $scope.maskElement.width(width);
+                    $scope.maskElement.height(height);
+
+                    $('body').append($scope.maskElement);
+                }
+                if (newValue == false && $scope.modal == true) {
+                    if ($scope.maskElement != null) {
+                        $scope.maskElement.remove();
+                    }
+                }
+
+                if (newValue == false && $scope.destroyOnClose == true) {
+                    $element.remove();
+                }
+            });
 
         },
         templateUrl: function (element, attrs) {

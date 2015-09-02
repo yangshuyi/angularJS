@@ -6,17 +6,17 @@ angular.module('bsdemo').controller('bsdemoCtrl', ['$scope','easyDialogProvider'
 
         var templateUrl = 'ngapp/bsdemo/panelContent.html';
         if($showEasyDialogScope==null) {
-            easyDialogProvider.openDialog(templateUrl, {'title': 'Modal Dialog', 'autoOpen': true, 'destroyOnClose':true}).then(function($dialogScope){
-                //$showEasyDialogScope = $dialogScope;
+            easyDialogProvider.openDialog(templateUrl, {'title': 'Modal Dialog', 'autoOpen': true, 'destroyOnClose':false}).then(function($dialogScope){
+                $showEasyDialogScope = $dialogScope;
 
-                //$showEasyDialogScope.dialogAPI.open();
+                $showEasyDialogScope.dialogAPI.open();
             });
         }else{
-            //if($showEasyDialogScope.dialogAPI.isOpened()){
-            //    $showEasyDialogScope.dialogAPI.close();
-            //}else{
-            //    $showEasyDialogScope.dialogAPI.open();
-            //}
+            if($showEasyDialogScope.dialogAPI.isOpened()){
+                $showEasyDialogScope.dialogAPI.close();
+            }else{
+                $showEasyDialogScope.dialogAPI.open();
+            }
         }
 
 

@@ -1,5 +1,6 @@
 'use strict';
 angular.module("common.easyui").provider("easyDialogProvider", [function () {
+
     this.$get = function ($templateRequest, $rootScope, $compile, $document, $q, $timeout) {
         var defaultOptions = {
             appendTo: $('body'),
@@ -23,6 +24,12 @@ angular.module("common.easyui").provider("easyDialogProvider", [function () {
             title: ''
         };
 
+        var dialogIdGenerator = 0;
+        var nextDialogId = function(){
+            dialogIdGenerator++
+            return 'easy-dialog_'+dialogIdGenerator;
+        }
+
         var service = {
 
             //return as promise
@@ -41,6 +48,7 @@ angular.module("common.easyui").provider("easyDialogProvider", [function () {
                     _.forEach(options, function (n, key) {
                         $dialogScope[key] = n;
                     });
+                    $dialogScope.dialogId = nextDialogId();
                     $dialogScope.dialogAPI = {};
 
                     var content = $compile(template)($dialogScope);

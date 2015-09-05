@@ -1,4 +1,4 @@
-angular.module('core').controller('mainCtrl', ['$scope', '$cookies', function ($scope, $cookies) {
+angular.module('core').controller('mainCtrl', ['$scope', '$cookies', '$timeout', function ($scope, $cookies, $timeout) {
     var COOKIE_USER = "user";
 
     $scope.onSlideClick = function (slide) {
@@ -50,18 +50,8 @@ angular.module('core').controller('mainCtrl', ['$scope', '$cookies', function ($
             $scope.user.rememberMe = "1";
         }
 
-        $scope.firstGridOptions = {
-            onRegisterApi : function(gridApi) {
-                $scope.gridApi = gridApi;
-            }
-        };
 
-        var gridDataArray = new Array(10);
-        for(var i=1;i<100;i++){
-            var obj = {id:i,name:'name-'+i,age:i*10,sex:i%2};
-            gridDataArray.push(obj);
-        }
-        $scope.gridApi.setGridData(gridDataArray,1000);
+
 
     };
 

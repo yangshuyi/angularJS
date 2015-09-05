@@ -10,15 +10,16 @@ angular.module('common.widget').directive('numberField', ['$filter', function ($
             min: '@',//最小值
             defaultValue: '@'//默认值
         },
-        link: function (scope, elem, attrs, ngModelCtrl) {
+        require: 'ngModel',
+        link: function ($scope, elem, attrs, ngModelCtrl) {
             var setViewValue = function (value) {
                 var fractionSize = null;
-                if (!angular.$isEmpty(scope.fractionSize)) {
-                    fractionSize = scope.fractionSize;
+                if (!angular.$isEmpty($scope.fractionSize)) {
+                    fractionSize = $scope.fractionSize;
                 }
 
                 if (fractionSize) {
-                    value = $filter('number')(value, scope.fractionSize);
+                    value = $filter('number')(value, $scope.fractionSize);
                 }
 
                 //在回调时设置$viewValue并执行digest循环
@@ -28,9 +29,9 @@ angular.module('common.widget').directive('numberField', ['$filter', function ($
             };
 
             var validateInput = function (value) {
-                var min = parseFloat(scope.min, 10);
-                var max = parseFloat(scope.max, 10);
-                var defaultValue = 0 || parseFloat(scope.defaultValue);
+                var min = parseFloat($scope.min, 10);
+                var max = parseFloat($scope.max, 10);
+                var defaultValue = 0 || parseFloat($scope.defaultValue);
 
                 if (angular.$isEmpty(value)) {
                     value = defaultValue;

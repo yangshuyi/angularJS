@@ -44,11 +44,12 @@ angular.module("common.component").factory("gridUtils", ["$timeout", '$window', 
             }, 0);
         },
 
-        initDefaultSetting: function (columns) {
-            var defaultColSetting = {
+        initDataDefaultSetting: function (columns) {
+            var dataDefaultSetting = {
                 field: '',
                 title: '',
                 sortable: false,
+                sort: 'asc',
                 resizable: false,
                 cellTemplate: null,
                 cellTemplateScope: null,
@@ -59,23 +60,34 @@ angular.module("common.component").factory("gridUtils", ["$timeout", '$window', 
             };
 
             _.forEach(columns, function (col) {
-
-                //处理sorting
-                if (angular.isUndefined(col.enableSorting)) {
-                    col.enableSorting = false;
-                }
-            });
-
-            _.forEach(columns, function (col) {
-
-                //处理sorting
-                if (angular.isUndefined(col.enableSorting)) {
-                    col.enableSorting = false;
-                }
+                col = _.merge(col, defaultColSetting);
             });
 
             //处理隐藏列
-            _.remove(columns, {'visible': false});
+            _.remove(columns, {hidden: true});
+        },
+
+        initDefaultSetting: function (columns) {
+            var defaultColSetting = {
+                field: '',
+                title: '',
+                sortable: false,
+                sort: 'asc',
+                resizable: false,
+                cellTemplate: null,
+                cellTemplateScope: null,
+                headStyle: '',
+                cellStyle: '',
+                headColSpan: 1,
+                hidden: false
+            };
+
+            _.forEach(columns, function (col) {
+                col = _.merge(col, defaultColSetting);
+            });
+
+            //处理隐藏列
+            _.remove(columns, {hidden: true});
         },
 
         initHeadColSpan: function (columns) {

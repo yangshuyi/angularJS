@@ -342,6 +342,18 @@ ul.social-share li a:hover {
     padding-bottom: 0;
 }
 
+.pagination-grid thead th{
+    text-align:center;
+}
+
+.pagination-grid .grid-checkbox-cell{
+    text-align:center;
+}
+
+.pagination-grid .grid-checkbox-cell{
+    text-align:center;
+}
+
 /*************************
 *******Home Page******
 **************************/

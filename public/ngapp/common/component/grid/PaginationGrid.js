@@ -5,12 +5,12 @@ angular.module('common.component').directive('paginationGrid', ['$timeout', '$wi
     var GRID_PAGINATION_PART_HEAD =
         "       <thead>" +
         "           <tr>" +
-        "               <th ng-if='showRowCheckbox()' class='grid-checkbox-cell'>" +
-        "                   <input type='checkbox' ng-click='selectAll(isSelectAll)' ng-model='isSelectAll' ng-checked='selectAllFlag'>" +
+        "               <th ng-if='hasRowCheckbox()' class='grid-checkbox-cell'>" +
+        "                   <input type='checkbox' ng-click='checkAllRows(checkAllFlag)' ng-checked='checkAllFlag'>" +
         "               </th>" +
-        "               <th ng-repeat='col in options.columns' ng-if='col.headerColSpan>0' colspan = '{{col.headerColSpan}}' ng-class='col.enableSorting ? \"sortable-head\" : \"\"' style='{{col.headStyle}}' ng-click='sortData(col, columns)'>" +
+        "               <th ng-repeat='col in columns' ng-if='col.headerColSpan>0' colspan = '{{col.headerColSpan}}' ng-class='col.enableSorting ? \"sortable-head\" : \"\"' style='{{col.headStyle}}' ng-click='sortData(col, columns)'>" +
         "                   <div ng-if='col.headTemplate' compile='col.headTemplate' cell-template-scope='col.headTemplateScope'></div>" +
-        "                   <div ng-if='!col.headTemplate' style='display:inline;'>{{col.headTemplate || col.displayName || col.field}}</div>" +
+        "                   <div ng-if='!col.headTemplate' style='display:inline;'>{{col.displayName || col.field}}</div>" +
         "                   <div ng-if='col.sort == \"asc\"' style='display:inline;'><i class='glyphicon' ng-class='\"glyphicon glyphicon-triangle-bottom\"'></i></div>" +
         "                   <div ng-if='col.sort == \"desc\"' style='display:inline;'><i class='glyphicon' ng-class='\"glyphicon glyphicon-triangle-top\"'></i></div>" +
         "               </th>" +
@@ -19,29 +19,29 @@ angular.module('common.component').directive('paginationGrid', ['$timeout', '$wi
 
     var GRID_PAGINATION_PART_BODY =
         "       <tbody>" +
-        "           <tr ng-repeat='row in options.data' ng-dblclick='rowDoubleClick(item)' ng-class='row.rowHighlight ? \"row-highlight\" : \"\"' ng-click='rowSelect(row)'>" +
-        "               <td ng-if='showRowCheckbox()' class='grid-checkbox-cell'><input type='checkbox' ng-model='row.selection' class='childChk' ng-click='rowCheck(row)'></td>" +
-        "               <td ng-repeat='col in options.columns' style='{{col.cellStyle}}'>" +
+        "           <tr ng-repeat='row in ngModel.data' ng-click='rowClick(row)' ng-dblclick='rowDblClick(row)' ng-class='row.$selected?\"grid-row-selected\":\"\"' >" +
+        "               <td ng-if='hasRowCheckbox()' class='grid-checkbox-cell'><input type='checkbox' ng-click='rowCheck(row)' ng-checked='col.checked'></td>" +
+        "               <td ng-repeat='col in columns' style='{{col.cellStyle}}'>" +
         "                   <div ng-if='col.cellTemplate' compile='col.cellTemplate' cell-template-scope='col.cellTemplateScope'></div>" +
-        "                   <div ng-if='!col.cellTemplate' title='{{ row[col.field] }}'>{{ col.filter ? $filter(col.filter)(item[col.field]) : item[col.field] }}</div>" +
+        "                   <div ng-if='!col.cellTemplate' title='{{ row[col.field] }}'>{{ col.filter ? $filter(col.filter)(row[col.field]) : row[col.field] }}</div>" +
         "               </td>" +
         "           </tr>" +
-        "           <tr ng-if='options.data == null || options.data.length == 0'>" +
-        "               <td colspan='{{columnNumber}}' class='no-data'>{{options.noDataMessage}}</td>" +
+        "           <tr ng-if='ngModel.data == null || ngModel.data.length == 0'>" +
+        "               <td colspan='{{getVisibleColumnCount()}}' class='no-data'>{{noDataMessage}}</td>" +
         "           </tr>" +
         "       </tbody>";
 
     var GRID_PAGINATION_PART_FOOT =
         "       <tfoot>" +
         "           <tr>" +
-        "               <td colspan='{{columnNumber}}'>" +
-        "                   <div paged-grid-bar></div>" +
+        "               <td colspan='{{getVisibleColumnCount()}}'>" +
+        "                   <div></div>" +
         "               </td>" +
         "           </tr>" +
         "       </tfoot>"
 
     var GRID_PAGINATION_STRUCTURE =
-        "<div class='table-responsive table-bordered bs-grid' style='overflow-x:hidden;'>" +
+        "<div class='table-responsive table-bordered pagination-grid' style='overflow-x:hidden;'>" +
         "   <table class='table table-head table-bordered table-hover table-striped' style='margin-bottom:0px; width:auto;'>" +
         GRID_PAGINATION_PART_HEAD +
         "   </table>" +
@@ -63,152 +63,136 @@ angular.module('common.component').directive('paginationGrid', ['$timeout', '$wi
             gridId: '@',
             checkOnSelect: '@',
             selectOnCheck: '@',
+            noDataMessage: '@',
             options: '=',
-            onPaginationChange: '=',
-            onRowDoubleClick: '&',
+            columns: '=',
+            ngModel: '=',
+
+            onLoad:'&',
+            onPaginationChange: '&',
             onRowCheck: '&',
+            onRowClick: '&',
             onRowSelect: '&',
-            onSortChanged: '&'
+            onRowDblClick: '&',
+            onCellClick: '&',
+            onSortChanged: '&',
+
+            api: '='
         },
-        link: function (scope, element, attrs) {
-            scope.appScope = scope.$parent;
-            scope.totalItems = 0;
-
-            scope.options.noDataMessage = scope.options.noDataMessage || '没有找到匹配的结果。';
-
-            scope.options.onDoubleClick = scope.options.onDoubleClick || null;
-
-            scope.selectAllFlag = false;
-
-
-            if (scope.options.enableRowSelection) {
-                scope.columnNumber = scope.options.columnDefs.length + 1; //FIXME it remove the hidden column and selection function.
-            } else {
-                scope.columnNumber = scope.options.columnDefs.length;
-            }
-            //处理ColSpan,
-            var initColumns = function (columns) {
-                gridUtils.initDefaultSetting(columns);
-                gridUtils.initHeadColSpan(columns);
+        require: 'ngModel',
+        link: function ($scope, element, attrs, ngModelCtrl) {
+            //Options
+            if (!attrs.gridId) {
+                attrs.$set('gridId', 'easy-grid-pagination_' + (new Date()).getTime());
             }
 
-            initColumns(scope.columns);
+            if (!attrs.singleSelect) {
+                attrs.$set('singleSelect', false);
+            }
+
+            if (!attrs.checkOnSelect) {
+                attrs.$set('checkOnSelect', false);
+            }
+
+            if (!attrs.selectOnCheck) {
+                attrs.$set('selectOnCheck', false);
+            }
+
+            if (!attrs.noDataMessage) {
+                attrs.$set('noDataMessage', '没有找到匹配的结果。');
+            }
+            //
+            //if (!attrs.columns) {
+            //    attrs.$set('columns', '[]');
+            //}
+
+            $scope.columns = $scope.columns || [];
+            $scope.api = $scope.api || {};
+
 
             /*** BEGIN ***/
-            scope.selectAll = function (isSelectAll) {
-                var rows = scope.options.data;
-                for (var i = 0; i < rows.length; i++) {
-                    var row = rows[i];
-                    row.selection = isSelectAll;
-                }
-                scope.selectAllFlag = isSelectAll;
-            };
 
-            scope.checkRow = function (row) {
-                if (scope.onSelect) {
-                    scope.onSelect(row);
-                }
-                //checkbox的全选和全不选的问题
-                var uncheckedRow = _.find(scope.options.data, function (row) {
-                    return row.selection === false || row.selection == null;
-                });
-                scope.selectAllFlag = (uncheckedRow == null);
-            };
-
-            scope.selectRow = function (row) {
-                if (scope.onSelect) {
-                    scope.onSelect(row);
-                }
-                //checkbox的全选和全不选的问题
-                var uncheckedRow = _.find(scope.options.data, function (row) {
-                    return row.selection === false || row.selection == null;
-                });
-                scope.selectAllFlag = (uncheckedRow == null);
-            };
-
-            scope.sortData = function (currentCol, columns) {
+            $scope.sortData = function (currentCol, columns) {
                 gridUtils.buildColumnSort(currentCol, columns);
 
-                if (scope.onSortChanged) {
-                    scope.onSortChanged(scope.options.currentPage, scope.options.paginationPageSize, currentCol.field, currentCol.sort);
+                if ($scope.onSortChanged) {
+                    $scope.onSortChanged($scope.options.currentPage, $scope.options.paginationPageSize, currentCol.field, currentCol.sort);
                 }
             }
-            /*** END ***/
 
+            $scope.getCheckedRows = function () {
+                var checkedRows = _.filter($scope.ngModel.data, {$checked:true});
+                return checkedRows;
+            }
 
+            $scope.hasRowCheckbox = function () {
+                return $scope.selectOnCheck || $scope.checkOnSelect;
+            }
 
+            $scope.getVisibleColumnCount = function () {
+                var visibleColumnCount = $scope.hasRowCheckbox() ? $scope.columns.length + 1 : $scope.columns.length;
+                return visibleColumnCount;
+            }
 
-            var init = function (col, columns) {
-                _.forEach(columns, function (otherCol) {
-                    if (col.field != otherCol.field) {
+            $scope.checkAllRows = function (isCheckAllRows) {
+                _.forEach($scope.ngModel.data, function(row){
+                    $scope.rowCheck(row, isCheckAllRows);
+                });
+            };
 
-                        otherCol.sort = null;
+            $scope.rowCheck = function (checkedRow, defaultValue) {
+                var uncheckedRow = _.filter($scope.ngModel.data, {$checked:false});
+
+                $scope.checkAllFlag = uncheckedRow.length==0;
+
+                $scope.onRowCheck(checkedRow, checkedRow.$checked);
+
+                if($scope.selectOnCheck && checkedRow.$checked){
+                    $scope.rowSelect(checkedRow);
+                }
+            };
+
+            $scope.rowClick = function (clickedRow) {
+                $scope.onRowClick(row);
+
+                $scope.rowSelect(clickedRow);
+            }
+
+            $scope.rowSelect = function (selectedRow) {
+                var previousSelectedRow = _.filter($scope.ngModel.data, {$selected:true});
+                if(previousSelectedRow!=null){
+                    if(previousSelectedRow != selectedRow){
+                        previousSelectedRow.$selected = false;
+                        $scope.onRowSelect(row, false);
+
+                        selectedRow.$selected = true;
+                    }else{
+                        return;
                     }
-                });
+                }else{
+                    selectedRow.$selected = true;
+                }
+
+                $scope.onRowSelect(selectedRow, true);
+
+                if($scope.selectOnCheck){
+                    $scope.rowCheck(selectedRow, true);
+                }
             }
 
-            scope.getSelectedRows = function () {
-                var selectedRows = [];
-                _.forEach(scope.options.data, function (item) {
-                    if (item.selection) {
-                        selectedRows.push(item);
-                    }
-                });
-                return selectedRows;
+            $scope.rowDblClick = function (row) {
+                $scope.onRowDblClick(row);
             }
 
-            // init explore api
-            if (scope.options.onRegisterApi) {
-                scope.options.onRegisterApi({
-                    getSelectedRows: function () {
-                        return scope.getSelectedRows();
-                    },
-                    setGridData: function (gridData, totalrecord) {
-                        scope.options.data = gridData;
-                        scope.dataBackup = angular.copy(scope.options.data);
-                        scope.options.totalItems = totalrecord;
-
-                        $timeout(function () {
-                            if (scope.options.fixedHeight) {
-                                scope.calcGridSize(scope.options.fixedHeight);
-                            } else {
-                                scope.calcGridSize();
-                            }
-                        }, 0);
-
-                    },
-                    forceCalcGridSize: function () {
-                        scope.calcGridSize();
-                    },
-                });
+            $scope.cellClick = function(row, field, value){
+                $scope.onCellClick(row, field, value);
             }
 
-            scope.showRowCheckbox = function () {
-                return scope.selectOnCheck || scope.checkOnSelect;
-            }
-
-            scope.getVisibleColumnCount = function () {
-                return scope.showRowCheckbox() ? scope.options.columns + 1 : scope.options.columns;
-            }
-
-            scope.rowCheck = function (row) {
-                scope.onRowCheck(row);
-            }
-
-            scope.rowSelect = function (row) {
-
-                scope.onRowSelect(row);
-            }
-
-            scope.rowDoubleClick = function (row) {
-                scope.onRowDoubleClick(row);
-            }
-
-            scope.calcGridSize = function (gridHeight) {
+            $scope.calcGridSize = function (gridHeight) {
                 $timeout(function () {
                     var definedGridHeight = 0;
-                    if (scope.appScope != null && scope.appScope.getGridHeight != null) {
-                        definedGridHeight = scope.appScope.getGridHeight(scope.gridId);
+                    if ($scope.appScope != null && $scope.appScope.getGridHeight != null) {
+                        definedGridHeight = $scope.appScope.getGridHeight($scope.gridId);
                     }
 
                     var gridHolderElement = element.parent().children('div');
@@ -216,20 +200,52 @@ angular.module('common.component').directive('paginationGrid', ['$timeout', '$wi
                 }, 0);
             };
 
-            scope.getTemplate = function () {
-                return TEMPLATE_PAGINATION_GRID;
+            /*** api ***/
+            $scope.api.getCheckedRows = function () {
+                return $scope.getCheckedRows();
             };
 
-            //如果是FixedGrid,需要计算GridSize，并监听resize事件
-            scope.calcGridSize();
 
-            $(window).resize(function (e) {
-                if (e.target != window) {
-                    //避免jQueryUI dialog的resize
-                    return;
-                }
-                scope.calcGridSize();
-            });
+            $scope.api.forceCalcGridSize = function () {
+                $scope.calcGridSize();
+            };
+
+
+            /*** init ***/
+            var init = function () {
+                $scope.appScope = $scope.$parent;
+                $scope.totalItems = 0;
+                $scope.checkAllFlag = false;
+
+                //initColumns
+                gridUtils.initDefaultSetting($scope.columns);
+                gridUtils.initHeadColSpan($scope.columns);
+
+
+                //用于当用户输入时，触发该pipeline，可以来修改model
+                ngModelCtrl.$parsers.push( function(){
+
+                });
+
+
+                //用于当model修改时，触发该pipeline，来修改directive的展现
+                ngModelCtrl.$formatters.push( function(){
+
+                    $scope.calcGridSize();
+                });
+
+                $(window).resize(function (e) {
+                    if (e.target != window) {
+                        //避免jQueryUI dialog的resize
+                        return;
+                    }
+                    $scope.calcGridSize();
+                });
+
+                $scope.onLoad();
+            }
+            init();
+
         },
         templateUrl: function (element, attrs) {
             return TEMPLATE_PAGINATION_GRID;
@@ -343,8 +359,8 @@ angular.module('common.component').directive('paginationGrid', ['$timeout', '$wi
                 };
             },
             template: '<div class="grid-page-bar">' +
-            '   <a href="javascript:void(0)" class="glyphicon glyphicon-step-backward paged-grid-ctrl-link paged-grid-link" ng-click="first()" ng-class="options.currentPage==1?\'not-active\':\'\'"></a>' +
-            '   <a href="javascript:void(0)" class="glyphicon glyphicon-triangle-left paged-grid-ctrl-link2 paged-grid-link" ng-click="previous()" ng-class="options.currentPage==1?\'not-active\':\'\'"></a>' +
+            '   <a href="javascript:void(0)" class="glyphicon glyphicon-step-backward paged-grid-ctrl-link paged-grid-link" ng-click="first()" ng-class="ngModel.pagination.currentPage==1?\'not-active\':\'\'"></a>' +
+            '   <a href="javascript:void(0)" class="glyphicon glyphicon-triangle-left paged-grid-ctrl-link2 paged-grid-link" ng-click="previous()" ng-class="ngModel.pagination.currentPage==1?\'not-active\':\'\'"></a>' +
             '   <a href="javascript:void(0)" class="paged-grid-num-link paged-grid-link" ng-if="options.currentGroup > 0" ng-click="previousGroup()">...</a>' +
             '   <a href="javascript:void(0)" class="paged-grid-num-link paged-grid-link" ng-repeat="pageNum in pageNums[options.currentGroup]" ng-click="paged(pageNum)" ng-class="pageNum == options.currentPage ? \'paged-grid-link-active\' : \'\'">{{pageNum}}</a>' +
             '   <a href="javascript:void(0)" class="paged-grid-num-link paged-grid-link" ng-if="options.currentGroup < maxGroup" ng-click="nextGroup()">...</a>' +

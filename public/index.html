@@ -67,7 +67,9 @@
 
     <script>
         angular.module("mainApp", ['common', 'core', 'bsdemo']);
-
+        angular.module("mainApp").config(['$compileProvider', function ($compileProvider) {
+            $compileProvider.debugInfoEnabled(true);
+        }]);
         angular.module("mainApp").config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
             $urlRouterProvider.otherwise('/bsdemo');
             $stateProvider.state('index', {
@@ -96,9 +98,7 @@
                 url: '/bsdemo',
                 views: {
                     mainView: {
-                        templateUrl: 'ngapp/bsdemo/bsdemo.html',
-                        controller: ['$scope', function ($scope, $rootScope) {
-                        }]
+                        templateUrl: 'ngapp/bsdemo/bsdemo.html'
                     }
                 }
             });

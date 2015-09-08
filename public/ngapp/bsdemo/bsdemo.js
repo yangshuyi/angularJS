@@ -60,11 +60,11 @@ angular.module('bsdemo').controller('bsdemoCtrl', ['$scope', 'easyDialogProvider
             sortable: false
 
         },
-    ]
+    ];
 
 
     $scope.firstGridOnLoad = function () {
-        var gridDataArray = new Array();
+        var gridDataArray = new Array(0);
         for (var i = 1; i < 100; i++) {
             var obj = {topicId: i, subject: 'subject-' + i, type: i % 5, date: new Date()};
             gridDataArray.push(obj);
@@ -73,7 +73,6 @@ angular.module('bsdemo').controller('bsdemoCtrl', ['$scope', 'easyDialogProvider
         $scope.firstGridData = {
             data: gridDataArray,
             pagination: {}
-        }
-
-    }
+        };
+    };
 }]);

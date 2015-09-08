@@ -212,14 +212,19 @@ angular.module("common.easyui").directive("easyDialog", ['$templateCache', '$com
             };
 
             $scope.api.setToTopLayer = function () {
-                var maxZIndexElement = _.max($('easy-dialog'), function (divElement) {
+                var dialogElements = $('easy-dialog');
+                if(dialogElements===0){
+                    return;
+                }
+
+                var maxZIndexElement = _.max(dialogElements, function (divElement) {
                     var zIndex = parseInt(divElement.style.zIndex);
                     return isNaN(zIndex) ? 0 : zIndex;
                 });
 
                 var zIndex = parseInt(maxZIndexElement.style.zIndex);
                 zIndex = (isNaN(zIndex) ? 0 : zIndex)
-                if (zIndex == 0 || $(maxZIndexElement).attr('dialog-id') != $element.attr('dialog-id')) {
+                if (zIndex === 0 || $(maxZIndexElement).attr('dialog-id') != $element.attr('dialog-id')) {
                     $element.css('z-index', zIndex + 1);
                 }
             };

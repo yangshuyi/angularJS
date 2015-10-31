@@ -32,7 +32,9 @@ angular.module("common.component").factory("gridUtils", ["$timeout", '$window', 
             bodyTbl.css("margin-top", headerTblHeight);
             bodyDiv.height(bodyDivHeight);
 
+            console.log('1');
             $timeout(function () {
+                console.log('2');
                 for (var colIdx = 0; colIdx < bodyCols.length; colIdx++) {
                     if (colIdx != bodyCols.length - 1) {
                         $(headerCols[colIdx]).width($(bodyCols[colIdx]).width());
@@ -41,36 +43,14 @@ angular.module("common.component").factory("gridUtils", ["$timeout", '$window', 
                         $(headerCols[colIdx]).width($(bodyCols[colIdx]).width() + (bodyDiv[0].offsetWidth - bodyDiv[0].clientWidth) + "px");
                     }
                 }
+                console.log('3');
             }, 0);
-        },
-
-        initDataDefaultSetting: function (columns) {
-            var dataDefaultSetting = {
-                field: '',
-                title: '',
-                sortable: false,
-                sort: 'asc',
-                resizable: false,
-                cellTemplate: null,
-                cellTemplateScope: null,
-                headStyle: '',
-                cellStyle: '',
-                headColSpan: 1,
-                hidden: false
-            };
-
-            _.forEach(columns, function (col) {
-                col = _.merge(col, defaultColSetting);
-            });
-
-            //处理隐藏列
-            _.remove(columns, {hidden: true});
         },
 
         initDefaultSetting: function (columns) {
             var defaultColSetting = {
+                displayName: '',
                 field: '',
-                title: '',
                 sortable: false,
                 sort: 'asc',
                 resizable: false,
@@ -83,7 +63,7 @@ angular.module("common.component").factory("gridUtils", ["$timeout", '$window', 
             };
 
             _.forEach(columns, function (col) {
-                col = _.merge(col, defaultColSetting);
+                col = angular.merge({}, col, defaultColSetting);
             });
 
             //处理隐藏列

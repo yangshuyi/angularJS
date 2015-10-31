@@ -8,9 +8,9 @@ angular.module('common.component').directive('paginationGrid', ['$timeout', '$wi
         "               <th ng-if='hasRowCheckbox()' class='grid-checkbox-cell'>" +
         "                   <input type='checkbox' ng-click='checkAllRows(checkAllFlag)' ng-checked='checkAllFlag'>" +
         "               </th>" +
-        "               <th ng-repeat='col in columns' ng-if='col.headerColSpan>0' colspan = '{{col.headerColSpan}}' ng-class='col.enableSorting ? \"sortable-head\" : \"\"' style='{{col.headStyle}}' ng-click='sortData(col, columns)'>" +
+        "               <th ng-repeat='col in ::columns' ng-if='col.headerColSpan>0' colspan = '{{col.headerColSpan}}' ng-class='col.enableSorting ? \"sortable-head\" : \"\"' style='{{col.headStyle}}' ng-click='sortData(col, columns)'>" +
         "                   <div ng-if='col.headTemplate' compile='col.headTemplate' cell-template-scope='col.headTemplateScope'></div>" +
-        "                   <div ng-if='!col.headTemplate' style='display:inline;'>{{col.displayName || col.field}}</div>" +
+        "                   <div ng-if='!col.headTemplate' style='display:inline;'>{{::col.displayName||col.field}}</div>" +
         "                   <div ng-if='col.sort == \"asc\"' style='display:inline;'><i class='glyphicon' ng-class='\"glyphicon glyphicon-triangle-bottom\"'></i></div>" +
         "                   <div ng-if='col.sort == \"desc\"' style='display:inline;'><i class='glyphicon' ng-class='\"glyphicon glyphicon-triangle-top\"'></i></div>" +
         "               </th>" +
@@ -19,11 +19,11 @@ angular.module('common.component').directive('paginationGrid', ['$timeout', '$wi
 
     var GRID_PAGINATION_PART_BODY =
         "       <tbody>" +
-        "           <tr ng-repeat='row in ngModel.data' ng-click='rowClick(row)' ng-dblclick='rowDblClick(row)' ng-class='row.$selected?\"grid-row-selected\":\"\"' >" +
+        "           <tr ng-repeat='row in ::ngModel.data' ng-click='rowClick(row)' ng-dblclick='rowDblClick(row)' ng-class='row.$selected?\"grid-row-selected\":\"\"' >" +
         "               <td ng-if='hasRowCheckbox()' class='grid-checkbox-cell'><input type='checkbox' ng-click='rowCheck(row)' ng-checked='col.checked'></td>" +
         "               <td ng-repeat='col in columns' style='{{col.cellStyle}}'>" +
         "                   <div ng-if='col.cellTemplate' compile='col.cellTemplate' cell-template-scope='col.cellTemplateScope'></div>" +
-        "                   <div ng-if='!col.cellTemplate' title='{{ row[col.field] }}'>{{ col.filter ? $filter(col.filter)(row[col.field]) : row[col.field] }}</div>" +
+        "                   <div ng-if='!col.cellTemplate' title='{{::row[col.field]}}'>{{::row[col.field]}}</div>" +
         "               </td>" +
         "           </tr>" +
         "           <tr ng-if='ngModel.data == null || ngModel.data.length == 0'>" +
@@ -38,7 +38,7 @@ angular.module('common.component').directive('paginationGrid', ['$timeout', '$wi
         "                   <div></div>" +
         "               </td>" +
         "           </tr>" +
-        "       </tfoot>"
+        "       </tfoot>";
 
     var GRID_PAGINATION_STRUCTURE =
         "<div class='table-responsive table-bordered pagination-grid' style='overflow-x:hidden;'>" +
@@ -143,7 +143,7 @@ angular.module('common.component').directive('paginationGrid', ['$timeout', '$wi
             $scope.rowCheck = function (checkedRow, defaultValue) {
                 var uncheckedRow = _.filter($scope.ngModel.data, {$checked:false});
 
-                $scope.checkAllFlag = uncheckedRow.length==0;
+                $scope.checkAllFlag = uncheckedRow.length===0;
 
                 $scope.onRowCheck(checkedRow, checkedRow.$checked);
 
@@ -153,7 +153,7 @@ angular.module('common.component').directive('paginationGrid', ['$timeout', '$wi
             };
 
             $scope.rowClick = function (clickedRow) {
-                $scope.onRowClick(row);
+                $scope.onRowClick(clickedRow);
 
                 $scope.rowSelect(clickedRow);
             }
@@ -163,7 +163,7 @@ angular.module('common.component').directive('paginationGrid', ['$timeout', '$wi
                 if(previousSelectedRow!=null){
                     if(previousSelectedRow != selectedRow){
                         previousSelectedRow.$selected = false;
-                        $scope.onRowSelect(row, false);
+                        $scope.onRowSelect(selectedRow, false);
 
                         selectedRow.$selected = true;
                     }else{
@@ -243,9 +243,9 @@ angular.module('common.component').directive('paginationGrid', ['$timeout', '$wi
                 });
 
                 $scope.onLoad();
-            }
-            init();
+            };
 
+            init();
         },
         templateUrl: function (element, attrs) {
             return TEMPLATE_PAGINATION_GRID;

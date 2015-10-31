@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title ng-bind="title"></title>
+    <link rel="stylesheet" href="lib/bootstrap-3.3.5-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="style/lib.css">
+    <link rel="stylesheet" href="style/core.css">
+</head>
+
+<body ng-app="mainApp" ng-controller="indexCtrl">
+<div>
+
+    <header></header>
+
+
+
+    <div class="container">
+        <div class="row">
+            <ol class="col-sm-12 col-xs-12 breadcrumb">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Library</a></li>
+                <li class="active">Data</li>
+            </ol>
+        </div>
+    </div>
+
+    <div ui-view="mainView"></div>
+
+    <footer></footer>
+
+    <script src="lib/lodash-3.10.1/lodash.js"></script>
+    <script src="lib/jquery-ui-1.11.4/external/jquery/jquery.js"></script>
+    <script src="lib/angular-1.4.3/angular.js"></script>
+    <script src="lib/angular-1.4.3/angular-cookies.js"></script>
+    <script src="lib/angular-1.4.3/angular-sanitize.js"></script>
+
+    <script src="lib/bootstrap-3.3.5-dist/js/bootstrap.js"></script>
+    <script src="lib/angular-ui-bootstrap-0.13.3/ui-bootstrap-0.13.3.js"></script>
+    <script src="lib/angular-ui-bootstrap-0.13.3/ui-bootstrap-tpls-0.13.3.js"></script>
+
+    <script src="lib/angular-ui-router/release/angular-ui-router.js"></script>
+    <!-- Defined JS lib-->
+
+    <script src="ngapp/common/Module.js"></script>
+
+    <script src="ngapp/common/widget/CompHori.js"></script>
+    <script src="ngapp/common/widget/NumberField.js"></script>
+    <script src="ngapp/common/widget/PasswordField.js"></script>
+    <script src="ngapp/common/widget/TelNoField.js"></script>
+    <script src="ngapp/common/widget/TextField.js"></script>
+    <script src="ngapp/common/widget/CaptchaField.js"></script>
+    <script src="ngapp/common/easyui/Panel.js"></script>
+    <script src="ngapp/common/easyui/Dialog.js"></script>
+    <script src="ngapp/common/easyui/DialogProvider.js"></script>
+
+
+
+    <script src="ngapp/common/component/Header.js"></script>
+    <script src="ngapp/common/component/Footer.js"></script>
+    <script src="ngapp/common/component/grid/PaginationGrid.js"></script>
+    <script src="ngapp/common/component/grid/GridUtils.js"></script>
+
+    <!--core-->
+    <script src="ngapp/core/Module.js"></script>
+
+    <!-- user -->
+    <script src="ngapp/core/main/mainCtrl.js"></script>
+    <script src="ngapp/bsdemo/bsdemo.js"></script>
+    <script src="ngapp/topic/topic.js"></script>
+    <script src="ngapp/core/user/userService.js"></script>
+
+    <script>
+<<<<<<< .merge_file_a10964
+        angular.module("mainApp", ['common', 'core', 'bsdemo']);
+=======
+        angular.module("mainApp", ['common', 'bsdemo']);
+>>>>>>> .merge_file_a03624
+
+        angular.module("mainApp").config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
+           // $urlRouterProvider.otherwise('/bsdemo');
+            $stateProvider.state('index', {
+                url: '/main',
+                views: {
+                    mainView: {
+                        templateUrl: 'ngapp/core/main/main.html',
+                        controller: ['$scope', function ($scope, $rootScope) {
+
+                        }]
+                    }
+                }
+            })
+            $stateProvider.state('dashboard', {
+                url: '/dashboard',
+                views: {
+                    mainView: {
+                        templateUrl: 'ngapp/core/dashboard/dashboard.html',
+                        controller: ['$scope', function ($scope, $rootScope) {
+
+                        }]
+                    }
+                }
+            })
+            $stateProvider.state('bsdemo', {
+                url: '/bsdemo',
+                views: {
+                    mainView: {
+                        templateUrl: 'ngapp/bsdemo/bsdemo.html',
+                        controller: ['$scope', function ($scope, $rootScope) {
+                        }]
+                    }
+                }
+
+
+            });
+            $stateProvider.state('topic', {
+                url: '/topic',
+                views: {
+                    mainView: {
+                        templateUrl: 'ngapp/topic/topic.html',
+                        controller: ['$scope', function ($scope) {
+                        }],
+                        onEnter: function () {
+                            console.log("enter topic");
+                        },
+                        onExit: function () {
+                            console.log("leave topic");
+                        }
+                    }
+                }
+
+
+            });
+        }]).controller('indexCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
+            $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+                console.log('stateChangeStart from state [' + fromState.name + '-' + fromState.url + '] to state[' + toState.name + '-' + toState.url + ']');
+
+            });
+        }]);
+
+
+    </script>
+</body>
+</html>

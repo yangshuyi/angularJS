@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title ng-bind="title"></title>
+    <link rel="stylesheet" href="lib/jquery-ui-1.11.4/jquery-ui.css">
+    <link rel="stylesheet" href="lib/bootstrap-3.3.5-dist/css/bootstrap.css">
+</head>
+<body ng-app="app">
+<div ng-controller="myController">
+    <div class="result">
+        <div>父scope：
+            <div>Say：{{name}}<br>改变父scope的name：<input type="text" value="" ng-model="name"/></div>
+        </div>
+        <div>隔离scope：
+            <div isolated-directive name="{{name}}"></div>
+        </div>
+        <div>隔离scope（不使用{{name}}）：
+            <div isolated-directive></div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script src="lib/lodash-3.10.1/lodash.js"></script>
+<script src="lib/jquery-ui-1.11.4/external/jquery/jquery.js"></script>
+<script src="lib/jquery-ui-1.11.4/jquery-ui.js"></script>
+<script src="lib/angular-1.4.3/angular.js"></script>
+<script src="lib/bootstrap-3.3.5-dist/js/bootstrap.js"></script>
+<script src="lib/angular-ui-bootstrap-0.13.3/ui-bootstrap-0.13.3.js"></script>
+<script src="lib/angular-ui-bootstrap-0.13.3/ui-bootstrap-tpls-0.13.3.js"></script>
+
+<script src="lib/angular-sanitize/angular-sanitize.js"></script>
+<script src="lib/angular-ui-router/release/angular-ui-router.js"></script>
+
+<!-- Defined JS lib-->
+
+<script src="ngapp/common/widget/DropDownField.js"></script>
+<script src="ngapp/common/widget/NumberField.js"></script>
+<script src="ngapp/common/widget/PasswordField.js"></script>
+<script src="ngapp/common/widget/TelNoField.js"></script>
+<script src="ngapp/common/widget/TextField.js"></script>
+<script src="ngapp/common/widget/Module.js"></script>
+
+<script src="ngapp/common/easyui/Panel.js"></script>
+<script src="ngapp/common/easyui/Module.js"></script>
+
+<script src="ngapp/common/component/Module.js"></script>
+
+<script src="ngapp/common/Module.js"></script>
+
+
+<!-- user -->
+<script src="ngapp/core/user/userService.js"></script>
+
+<script>
+    angular.module('app').controller("myController", function ($scope) {
+        $scope.name = "hello world";
+    }).directive("isolatedDirective", function () {
+        return {
+            scope: {
+                name: "@"
+            },
+            template: 'Say：{{name}} <br>改变隔离scope的name：<input type="buttom" value="" ng-model="name"/>',
+            link:function(scope){
+                scope.name = "aaaa";
+                console.log('aaa')
+            }
+        }
+    })
+
+</script>
+</body>
+</html>

@@ -1,13 +1,13 @@
-angular.module('common.widget.TextField').directive('text'), function(){
+'use strict';
+angular.module('common.widget').directive('textField', [function () {
     return {
-        scope:{
-            value:'='
+        scope: {
+            ngModel: '=',
+            placeholder: '@'
         },
-        link:function(scope, elem, attrs, ngModel){
+        link: function (scope, elem, attrs, ngModel) {
 
         },
-        template:'<input type="text" value="{{value}}">'
-
-
-    }
-}
+        template: '<input type="text" value="{{value}}" placeholder="{{placeholder}}" class="form-control">'
+    };
+}])

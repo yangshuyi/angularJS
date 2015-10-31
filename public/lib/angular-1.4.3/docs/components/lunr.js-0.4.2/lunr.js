@@ -744,7 +744,7 @@ lunr.SortedSet.prototype.toJSON = function () {
 
 /**
  * lunr.Index is object that manages a search index.  It contains the indexes
- * and stores all the tokens and document lookups.  It also provides the main
+ * and stores all the tokens and document lookups.  It also provides the dashboard
  * user facing API for the library.
  *
  * @constructor
